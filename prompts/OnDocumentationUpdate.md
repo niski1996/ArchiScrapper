@@ -1,58 +1,46 @@
 # OnDocumentationUpdate
 
-## Cel
+## Purpose
+Rules for updating microservice documentation in the central repo. Docs exist in **two layers**:
 
-Ten plik określa zasady aktualizacji dokumentacji mikroserwisów w centralnym repozytorium. Dokumentacja składa się z dwóch warstw:
+1. **H_** – human-readable, full architecture + module descriptions
+2. **C_** – Copilot-readable, token-optimized minimal info
 
-1. **H_** – pliki human-readable, pełny opis architektury i modułów dla ludzi  
-2. **C_** – pliki Copilot-readable, zoptymalizowane pod kątem tokenów, zawierające jedynie niezbędne informacje do analizy systemu
-
-Aktualizacje muszą zachować spójność między tymi dwoma warstwami.
+Updates must keep both layers consistent.
 
 ---
 
-## Zasady aktualizacji
+## Update Rules
 
-### 1. Folder tymczasowy
+### 1. Temp Folder
+- Single shared folder for Copilot temp data (diffs, integrations, commit states).  
+- Overwritten with each new module update, no per-module folders.
 
-- Istnieje **jeden wspólny folder na pliki tymczasowe** dla Copilota, w którym przechowywane są analizy i tymczasowe dane potrzebne do aktualizacji dokumentacji.  
-- Podczas pracy nad danym modułem:
-  - Copilot zapisuje w tym folderze wszystkie tymczasowe informacje (diffy, listy integracji, stany poprzednich commitów).  
-- Po zakończeniu pracy nad modułem:
-  - Folder tymczasowy jest nadpisywany przy pracy nad następnym module – nie tworzy się osobnych folderów dla modułów.
+### 2. Change Identification
+- Identify branch + commit.  
+- Use changelog to generate diff vs last version.  
+- Update only where changes are certain.
 
-### 2. Identyfikacja zmian
+### 3. Scope
+- Update only:
+  - new/modified modules, classes, features affecting integrations/architecture
+  - I/O points (events, APIs, DBs)
+  - Copilot files (`C_`)
+- Do **not** update UML/Mermaid unless sure of relation changes.  
+- Ignore trivial code/comment-only changes.
 
-- Zidentyfikuj **branch i commit**, na którym pracujesz.  
-- Wykorzystaj **changelog** w plikach dokumentacji do wygenerowania **diffa** między aktualną wersją a ostatnią wersją.  
-- Zmiany w dokumentacji należy wprowadzać **tylko tam, gdzie jesteś pewien**, że coś rzeczywiście się zmieniło lub pojawiło się nowe.
+### 4. Human Review
+- All updates require human approval before merge.  
+- Copilot proposes, human validates, then merges.
 
-### 3. Zakres zmian
-
-- Zmiany ograniczaj do:
-  - nowych lub zmodyfikowanych modułów, klas lub funkcjonalności, które wpływają na integracje lub architekturę,
-  - punktów wejścia/wyjścia modułów (eventy, API, bazy danych),
-  - aktualizacji COP-plików dla Copilota.
-
-- **Nie aktualizuj grafów UML ani diagramów Mermaid**, jeśli nie jesteś pewien zmian w relacjach między modułami lub serwisami.  
-- Nie aktualizuj trywialnych zmian, które nie mają wpływu na architekturę (np. komentarze w kodzie bez zmiany API).
-
-### 4. Konsultacja z człowiekiem
-
-- Każda aktualizacja dokumentacji wymaga **weryfikacji przez człowieka** przed zatwierdzeniem:  
-  - Copilot przedstawia proponowane zmiany i integracje.  
-  - Człowiek ocenia, czy zmiany są sensowne i zgodne z rzeczywistym działaniem systemu.  
-- Dopiero po zatwierdzeniu zmiany zostają scalone do centralnego repozytorium.
-
-### 5. Spójność między plikami
-
-- Plik **C_** musi być **w pełni zawarty w pliku H_**.  
-- Plik **H_** może zawierać dodatkowe, opisowe informacje, które nie występują w C_ (np. wzorce projektowe, kontekst).  
-- Wszystkie zmiany w plikach C_ muszą być odzwierciedlone w plikach H_.
+### 5. Consistency
+- `C_` ⊆ `H_`.  
+- `H_` may add extra context but not conflict.  
+- All `C_` changes must be reflected in `H_`.
 
 ### 6. Changelog
-
-- Każdy plik dokumentacji posiada sekcję **Changelog**:  
-  ```markdown
-  ## Changelog
-  - <hash commit>: <YYYY-MM-DD>: <opis zmiany>
+Each doc must include:
+```markdown
+## Changelog
+- <commit-hash>: <YYYY-MM-DD>: <change-description>
+```

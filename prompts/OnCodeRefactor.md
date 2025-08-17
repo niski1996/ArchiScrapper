@@ -1,90 +1,77 @@
 # OnCodeRefactor
 
-## Cel
+## Purpose
+Defines how Copilot should perform refactoring across the microservices repo, at both project/module level and service architecture level.
 
-Ten plik określa, jak Copilot powinien przeprowadzać refaktoryzację kodu w całym repozytorium mikroserwisów, zarówno na poziomie pojedynczych projektów/modułów, jak i na poziomie architektury serwisu.
-
-Refaktoryzacja ma na celu:
-
-1. Identyfikowanie powtarzalnych fragmentów kodu w mikroserwisach.
-2. Identyfikowanie powszechnych wzorców projektowych, które mogą być użyte w innych serwisach.
-3. Identyfikowanie klas, metod i struktur łamiących zasady SOLID.
-4. Przygotowanie rekomendacji do poprawy czytelności, modularności i utrzymania kodu.
+Goals:
+1. Identify repeating code fragments.  
+2. Detect common design patterns for reuse.  
+3. Find classes/methods/structures violating SOLID.  
+4. Recommend improvements for readability, modularity, maintainability.
 
 ---
 
-## 1. Przegląd repozytorium
-
-* Copilot przechodzi przez repozytorium projekt po projekcie, moduł po module.
-* Na poziomie mikroserwisu skanuje wszystkie pliki źródłowe.
-* Na poziomie wyżej, w folderze architektury serwisu, konsoliduje informacje o powtarzalnych wzorcach i klasach/fragmentach kodu, które mogą być użyte w innych mikroserwisach.
-
----
-
-## 2. Identyfikowanie powtarzalnych elementów
-
-* Na poziomie mikroserwisu:
-
-  * Szukaj fragmentów kodu, które powtarzają się **trzy razy lub więcej**.
-  * Zidentyfikuj metody, funkcje lub klasy, które mogą zostać wyciągnięte do klasy bazowej lub abstrakcyjnej.
-  * Zapisz je w folderze mikroserwisu jako potencjalne kandydatury do refaktoryzacji.
-
-* Na poziomie architektury mikroserwisu:
-
-  * Konsoliduj informacje o wzorcach, które pojawiają się w wielu serwisach.
-  * Przechowuj lokalizacje, w których występują powtarzalne fragmenty.
-  * Oceniaj potencjał do wyciągnięcia do narzędzi (tools) lub wspólnych bibliotek.
+## 1. Repo Scan
+- Copilot scans project by project, module by module.  
+- At microservice level → scans all source files.  
+- At architecture level → consolidates repeated patterns and reusable code across services.
 
 ---
 
-## 3. Wzorce projektowe
-
-* Podczas skanowania identyfikuj powszechnie znane wzorce projektowe.
-* Jeśli wzorzec powtarza się w jednym mikroserwisie, zapisuj go lokalnie.
-* Jeśli wzorzec występuje w kilku mikroserwisach, zapisuj go w folderze architektury na wyższym poziomie, wraz z lokalizacjami jego występowania.
-
----
-
-## 4. Identyfikacja naruszeń SOLID
-
-* Na poziomie mikroserwisu analizuj klasy i metody pod kątem zasad SOLID:
-
-  * Single Responsibility
-  * Open/Closed
-  * Liskov Substitution
-  * Interface Segregation
-  * Dependency Inversion
-* Zapisuj klasy/metody, które łamią te zasady i rekomenduj sposoby ich uproszczenia lub refaktoryzacji.
+## 2. Repeated Elements
+- **Within microservice:**
+  - Detect fragments repeated ≥3 times.
+  - Identify methods/classes extractable into base/abstract classes.
+  - Save candidates in service folder.
+- **Across architecture:**
+  - Consolidate recurring patterns across services.
+  - Record their locations.
+  - Evaluate extraction into tools/shared libs.
 
 ---
 
-## 5. Konsolidacja i rekomendacje
-
-* Po przejściu przez wszystkie moduły mikroserwisu:
-
-  * Konsoliduj listę powtarzalnych fragmentów kodu.
-  * Konsoliduj listę powszechnych wzorców, które mogą zostać wykorzystane w innych mikroserwisach.
-  * Twórz rekomendacje dotyczące:
-
-    * Refaktoryzacji klas/metod łamiących SOLID
-    * Wyciągnięcia powtarzalnych fragmentów do wspólnych narzędzi
-    * Poprawy czytelności i modularności kodu
-* Raport generowany w tym folderze architektury powinien zawierać lokalizacje wszystkich wykrytych problemów i propozycje zmian.
+## 3. Design Patterns
+- Detect known design patterns during scan.  
+- If pattern is local → record in microservice.  
+- If in multiple services → record in architecture folder with locations.
 
 ---
 
-## 6. Priorytety Copilota
+## 4. SOLID Violations
+Analyze classes/methods for:
+- Single Responsibility  
+- Open/Closed  
+- Liskov Substitution  
+- Interface Segregation  
+- Dependency Inversion  
 
-1. Najpierw identyfikacja powtarzalnych fragmentów i naruszeń SOLID w obrębie mikroserwisu.
-2. Następnie analiza wzorców powtarzających się w wielu mikroserwisach.
-3. Tworzenie rekomendacji do wyciągnięcia wspólnych narzędzi i poprawy czytelności kodu.
-4. Wszystkie sugestie refaktoryzacji muszą być przeglądane i akceptowane przez człowieka przed wprowadzeniem zmian.
+Record violations and propose simplifications/refactors.
 
 ---
 
-## Efekt
+## 5. Consolidation & Recommendations
+After scanning all modules:
+- Consolidate repeated fragments.  
+- Consolidate common patterns across services.  
+- Generate recommendations:
+  - Refactor SOLID violations
+  - Extract repeats into tools/shared libs
+  - Improve readability & modularity
 
-* Pełna mapa powtarzalnych fragmentów kodu w mikroserwisach.
-* Zidentyfikowane naruszenia SOLID i rekomendacje ich naprawy.
-* Wykryte powszechne wzorce projektowe, gotowe do ekstrakcji do wspólnych narzędzi.
-* Raport jest gotowy do dalszej oceny i wdrożenia przez zespół deweloperski.
+Report in architecture folder must list all findings + proposed changes.
+
+---
+
+## 6. Copilot Priorities
+1. Identify repeats & SOLID issues within microservice.  
+2. Analyze cross-service recurring patterns.  
+3. Recommend shared tools + readability improvements.  
+4. All refactor suggestions require human review before changes.
+
+---
+
+## Outcome
+- Map of repeated code in microservices.  
+- Identified SOLID violations + fixes.  
+- Detected reusable design patterns.  
+- Report ready for human evaluation & implementation.
