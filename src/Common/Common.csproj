@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ArchiScrapper.Common</RootNamespace>
+    <AssemblyName>ArchiScrapper.Common</AssemblyName>
+  </PropertyGroup>
+</Project>

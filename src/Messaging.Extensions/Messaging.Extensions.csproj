@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ArchiScrapper.Messaging.Extensions</RootNamespace>
+    <AssemblyName>ArchiScrapper.Messaging.Extensions</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Messaging.Abstractions/Messaging.Abstractions.csproj" />
+    <ProjectReference Include="../Messaging.Core/Messaging.Core.csproj" />
+    <ProjectReference Include="../Models/Models.csproj" />
+    <ProjectReference Include="../Common/Common.csproj" />
+  </ItemGroup>
+</Project>
