@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ArchiScrapper.CommonMessaging.IntegrationTests</RootNamespace>
+    <AssemblyName>ArchiScrapper.CommonMessaging.IntegrationTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Contracts/Contracts.csproj" />
+    <ProjectReference Include="../../src/Models/Models.csproj" />
+    <ProjectReference Include="../../src/Common/Common.csproj" />
+    <ProjectReference Include="../../src/Messaging.Abstractions/Messaging.Abstractions.csproj" />
+    <ProjectReference Include="../../src/Messaging.Core/Messaging.Core.csproj" />
+    <ProjectReference Include="../../src/Messaging.Extensions/Messaging.Extensions.csproj" />
+  </ItemGroup>
+</Project>

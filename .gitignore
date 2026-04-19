@@ -29,6 +29,9 @@ packages/
 # Logs
 *.log
 
+# Local analysis artifacts
+.VSCodeCounter/
+
 # OS
 .DS_Store
 Thumbs.db

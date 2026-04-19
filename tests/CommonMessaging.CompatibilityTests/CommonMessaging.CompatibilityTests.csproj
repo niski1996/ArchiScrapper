@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>ArchiScrapper.Messaging.Tests</RootNamespace>
-    <AssemblyName>ArchiScrapper.Messaging.Tests</AssemblyName>
+    <RootNamespace>ArchiScrapper.CommonMessaging.CompatibilityTests</RootNamespace>
+    <AssemblyName>ArchiScrapper.CommonMessaging.CompatibilityTests</AssemblyName>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
