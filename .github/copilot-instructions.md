@@ -5,6 +5,26 @@
 - Do not introduce business domain logic unless explicitly requested.
 - Do not introduce messaging contracts unless explicitly requested.
 
+## Current Implementation Baseline (2026-04-19)
+- Keep the message model intentionally simple.
+- Do not reintroduce `IEvent` unless explicitly requested.
+- Canonical transport input for processing flow is `RawEnvelope`.
+- `ResolvingExampleEvent` exists only as a compatibility type built on top of `RawEnvelope`.
+- Materialization path supports payload source resolution: inline payload and payload reference.
+- Core processing path is: `RawEnvelope` -> materialization pipeline -> typed envelope -> handling pipeline.
+- Handling pipeline preserves framework/business split:
+	- Infrastructure steps (`IInfrastructureStep<TPayload>`) for framework-owned technical processing.
+	- Business steps (`IBusinessStep<TPayload>`) for domain/application-level policy.
+	- Consumer handler (`IEventConsumer<TPayload>`) as final business endpoint.
+- Maintain multi-layer test structure and keep it green:
+	- Unit, Contract, Integration, E2E, Compatibility, Performance.
+
+## Continuity Protocol
+- When architectural or behavioral decisions are made, update `docs/decisions.md`.
+- When implementation scope changes, update `docs/changelog.md` and any relevant plan/status doc.
+- Keep repository memory in sync by appending concise, factual notes under `/memories/repo/`.
+- Prefer documenting stable decisions and current baseline, not transient terminal noise.
+
 ## Facade Architecture Constraint
 This project is a domain-specific facade over an existing internal messaging library.
 

@@ -1,5 +1,7 @@
 # Implementation Plan: Event-Driven Common Library
 
+> Status note (2026-04-19): This document contains initial architecture concepts. Current accepted baseline and implementation direction are defined in `docs/decisions.md`, `docs/changelog.md`, and `.github/copilot-instructions.md`.
+
 ## 1. Architecture Overview
 
 ### 1.1 Role and Layering

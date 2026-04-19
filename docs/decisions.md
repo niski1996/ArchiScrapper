@@ -18,3 +18,24 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Build foundation assets before implementing domain or messaging logic.
 - Alternatives considered: Start coding feature slices immediately.
 - Consequences: Lower short-term delivery speed, higher long-term consistency and maintainability.
+
+### DEC-20260419-SimplifiedEnvelopeModel
+- Status: Accepted
+- Context: The initial architecture concept was richer than needed and increased complexity for early delivery.
+- Decision: Keep envelope model minimal and explicit. Base metadata remains focused (`FirstName`, `LastName`, `City`), without reintroducing `IEvent`.
+- Alternatives considered: Keep broader event classification model with additional abstractions.
+- Consequences: Faster onboarding and lower complexity, with deliberate tradeoff of fewer built-in semantics.
+
+### DEC-20260419-RawEnvelopeAsCanonicalInput
+- Status: Accepted
+- Context: Processing flow required a clear transport-level input contract independent from example/specialized event types.
+- Decision: Use `RawEnvelope` as canonical input for materialization and end-to-end processing; keep `ResolvingExampleEvent` as compatibility type only.
+- Alternatives considered: Continue using `ResolvingExampleEvent` as primary flow input.
+- Consequences: Clear boundary between transport model and compatibility/demo types, simpler extension path.
+
+### DEC-20260419-PayloadSourceResolutionBoundary
+- Status: Accepted
+- Context: Payload may be delivered inline or by reference and should be resolved before payload materialization.
+- Decision: Introduce `IPayloadSourceResolver` and `IPayloadStorageProvider` abstractions; materialization pipeline resolves payload via resolver.
+- Alternatives considered: Resolve payload directly inside stages without dedicated abstractions.
+- Consequences: Better SRP and testability; easier replacement of storage backends and resolution strategies.
