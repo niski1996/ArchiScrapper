@@ -46,3 +46,10 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Introduce a central `IHandlingPipelineErrorHandler<TPayload>` that can resolve failures as `Retry`, `Continue`, or `Stop`; the default behavior remains stop-and-rethrow.
 - Alternatives considered: Per-step ad hoc exception handling, silent swallowing, or hard-coded retries.
 - Consequences: Consumers can program retry/skip/abort behavior declaratively while the framework keeps one consistent error boundary.
+
+### DEC-20260419-PublicationErrorPolicy
+- Status: Accepted
+- Context: Publish-side composition also needs a single programmable place to decide whether to retry, continue with fallback output, or abort when serialization or storage fails.
+- Decision: Add `IEnvelopePublicationErrorHandler<TPayload>` and make `IEnvelopePublicationPipeline` / `IEnvelopePublisher<TPayload>` accept an optional handler per call; default behavior is stop-and-rethrow.
+- Alternatives considered: Separate ad hoc `try/catch` blocks inside publisher methods, or global static policy.
+- Consequences: Publication can be customized at the call site without introducing a broader orchestration framework.

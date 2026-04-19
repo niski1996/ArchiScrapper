@@ -26,6 +26,11 @@ This document is a durable handover snapshot for Copilot and contributors.
 - `AddRawEventProcessingFlow<TPayload>()` composes handling pipeline and raw processing flow from registered steps and consumer.
 - DI registration explicitly builds `EnvelopeMaterializationPipeline` with default internal stages to avoid empty-stage materialization.
 
+## Publication Error Policy
+- `IEnvelopePublicationPipeline` and `IEnvelopePublisher<TPayload>` accept an optional `IEnvelopePublicationErrorHandler<TPayload>` per call.
+- Publication errors can be resolved as `Retry`, `Continue`, or `Stop`; default behavior is stop-and-rethrow.
+- Inline publication continues with an empty payload on continue; reference publication falls back to inline output if payload storage fails and continue is chosen.
+
 ## Handling Pipeline Contract
 - Pipeline order is explicit and stable:
   1. `IInfrastructureStep<TPayload>` (framework/technical concerns)

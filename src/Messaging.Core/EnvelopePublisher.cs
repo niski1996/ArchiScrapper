@@ -12,21 +12,28 @@ public sealed class EnvelopePublisher<TPayload> : IEnvelopePublisher<TPayload>
         this.publicationPipeline = publicationPipeline ?? throw new ArgumentNullException(nameof(publicationPipeline));
     }
 
-    public RawEnvelope PublishInline(TypedEnvelope<TPayload> source, Func<TPayload, string> payloadSerializer)
+    public RawEnvelope PublishInline(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
     {
-        return publicationPipeline.Compose(source, payloadSerializer);
+        return publicationPipeline.Compose(source, payloadSerializer, errorHandler);
     }
 
-    public RawEnvelope Publish(TypedEnvelope<TPayload> source, Func<TPayload, string> payloadSerializer)
+    public RawEnvelope Publish(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
     {
-        return PublishInline(source, payloadSerializer);
+        return PublishInline(source, payloadSerializer, errorHandler);
     }
 
     public RawEnvelope PublishWithReference(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
-        string payloadReference)
+        string payloadReference,
+        IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
     {
-        return publicationPipeline.ComposeWithReference(source, payloadSerializer, payloadReference);
+        return publicationPipeline.ComposeWithReference(source, payloadSerializer, payloadReference, errorHandler);
     }
 }

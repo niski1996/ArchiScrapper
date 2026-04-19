@@ -22,6 +22,7 @@ All notable repository-level changes are documented in this file.
 - End-to-end publish -> consume roundtrip tests for inline and referenced payloads.
 - Explicit inline convenience method `PublishInline(...)` on `IEnvelopePublisher<TPayload>`.
 - Central handling pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions.
+- Central publication pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions per call.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.
