@@ -46,6 +46,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 - Work Unit 02 (`Payload Source Resolution`) is documented separately in `docs/work-units/02-payload-source-resolution.md`.
 - Work Unit 03 (`Materialization Pipeline`) is documented separately in `docs/work-units/03-materialization-pipeline.md`.
 - Work Unit 04 (`Handling Pipeline and Custom Steps`) is documented separately in `docs/work-units/04-handling-pipeline.md`.
+- Work Unit 05 (`DI and Composition`) is documented separately in `docs/work-units/05-di-composition.md`.
 
 ## Continuity Rules
 - Any architecture or behavior change must update:
