@@ -24,6 +24,7 @@ All notable repository-level changes are documented in this file.
 - Central handling pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions.
 - Central publication pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions per call.
 - Publication policy builder and telemetry hook for reusable publish-side configuration.
+- Default publication policy profile (`UseDefaultProfile`) and sample usage for publish + telemetry.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

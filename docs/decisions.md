@@ -60,3 +60,10 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Add `IEnvelopePublicationPolicyBuilder<TPayload>` and `IEnvelopePublicationTelemetry<TPayload>`; publish APIs gain policy-based overloads alongside the existing handler-based overloads.
 - Alternatives considered: Hard-code telemetry into the pipeline, or require users to wire separate handler and telemetry objects manually.
 - Consequences: Publication policy can be built once, reused across calls, and instrumented without changing the core pipeline.
+
+### DEC-20260419-DefaultPublicationPolicyProfile
+- Status: Accepted
+- Context: Users need a low-friction default profile that avoids manual composition of retry/fallback behavior for common publish failures.
+- Decision: Add `UseDefaultProfile(...)` extension for `IEnvelopePublicationPolicyBuilder<TPayload>` backed by `DefaultEnvelopePublicationErrorHandler<TPayload>`.
+- Alternatives considered: Require custom error handler implementation for every service.
+- Consequences: Faster onboarding and consistent default error behavior, while preserving full customization through explicit handlers.

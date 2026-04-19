@@ -15,6 +15,7 @@ public class PublicApiCompatibilityTests
         Assert.Contains(methods, method => method.Name == "UseInfrastructureStep");
         Assert.Contains(methods, method => method.Name == "UseBusinessStep");
         Assert.Contains(methods, method => method.Name == "UseHandler");
+        Assert.Contains(methods, method => method.Name == "UseErrorHandler");
         Assert.Contains(methods, method => method.Name == "Build");
     }
 
@@ -26,6 +27,30 @@ public class PublicApiCompatibilityTests
         Assert.Contains(methods, method => method.Name == "UseInfrastructureStep");
         Assert.Contains(methods, method => method.Name == "UseBusinessStep");
         Assert.Contains(methods, method => method.Name == "UseHandler");
+        Assert.Contains(methods, method => method.Name == "UseErrorHandler");
+        Assert.Contains(methods, method => method.Name == "Build");
+    }
+
+    [Fact]
+    public void EnvelopePublisherContractContainsExpectedMethods()
+    {
+        var methods = typeof(IEnvelopePublisher<>).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+
+        Assert.Contains(methods, method => method.Name == "PublishInline");
+        Assert.Contains(methods, method => method.Name == "PublishInlineWithPolicy");
+        Assert.Contains(methods, method => method.Name == "Publish");
+        Assert.Contains(methods, method => method.Name == "PublishWithPolicy");
+        Assert.Contains(methods, method => method.Name == "PublishWithReference");
+        Assert.Contains(methods, method => method.Name == "PublishWithReferenceWithPolicy");
+    }
+
+    [Fact]
+    public void EnvelopePublicationPolicyBuilderContractContainsExpectedMethods()
+    {
+        var methods = typeof(IEnvelopePublicationPolicyBuilder<>).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+
+        Assert.Contains(methods, method => method.Name == "UseErrorHandler");
+        Assert.Contains(methods, method => method.Name == "UseTelemetry");
         Assert.Contains(methods, method => method.Name == "Build");
     }
 }

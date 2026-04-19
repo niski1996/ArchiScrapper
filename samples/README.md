@@ -83,3 +83,54 @@ public sealed class PersonConsumer : IEventConsumer<PersonPayload>
 	}
 }
 ```
+
+### 5. Publish With Default Policy Profile
+
+```csharp
+using ArchiScrapper.Messaging.Abstractions;
+using ArchiScrapper.Messaging.Extensions;
+using ArchiScrapper.Models;
+
+var publisher = serviceProvider.GetRequiredService<IEnvelopePublisher<PersonPayload>>();
+var policyBuilder = serviceProvider.GetRequiredService<IEnvelopePublicationPolicyBuilder<PersonPayload>>();
+
+var policy = policyBuilder
+	.UseDefaultProfile(maxRetriesPerStep: 1, continueOnStoreFailure: true)
+	.UseTelemetry(new ConsolePublicationTelemetry())
+	.Build();
+
+var typedEnvelope = new TypedEnvelope<PersonPayload>(
+	"Anna",
+	"Nowak",
+	"Gdansk",
+	new PersonPayload("Anna", "Nowak", "Gdansk"));
+
+var rawForInline = publisher.PublishInlineWithPolicy(
+	typedEnvelope,
+	payload => System.Text.Json.JsonSerializer.Serialize(payload),
+	policy);
+
+var rawForReference = publisher.PublishWithReferenceWithPolicy(
+	typedEnvelope,
+	payload => System.Text.Json.JsonSerializer.Serialize(payload),
+	"person-ref-42",
+	policy);
+
+public sealed class ConsolePublicationTelemetry : IEnvelopePublicationTelemetry<PersonPayload>
+{
+	public void OnStepStarting(EnvelopePublicationTelemetryContext<PersonPayload> context)
+	{
+		Console.WriteLine($"START {context.StepKind} attempt={context.Attempt}");
+	}
+
+	public void OnStepSucceeded(EnvelopePublicationTelemetryContext<PersonPayload> context)
+	{
+		Console.WriteLine($"SUCCESS {context.StepKind} attempt={context.Attempt}");
+	}
+
+	public void OnStepFailed(EnvelopePublicationTelemetryContext<PersonPayload> context)
+	{
+		Console.WriteLine($"FAIL {context.StepKind} attempt={context.Attempt} error={context.Exception?.Message}");
+	}
+}
+```

@@ -35,6 +35,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 - `IEnvelopePublicationPolicyBuilder<TPayload>` composes reusable publication policy from error handling and telemetry.
 - `IEnvelopePublicationTelemetry<TPayload>` observes publication attempts, successes, and failures per step.
 - Policy-based publish overloads are available on `IEnvelopePublicationPipeline` and `IEnvelopePublisher<TPayload>`.
+- `UseDefaultProfile(...)` provides a ready-made default publication profile (retry and optional store-failure fallback) for quick adoption.
 
 ## Handling Pipeline Contract
 - Pipeline order is explicit and stable:
