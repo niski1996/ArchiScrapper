@@ -18,7 +18,7 @@ public class EnvelopePublisherTests
             "Krakow",
             new PersonPayload("Jan", "Kowalski", "Krakow"));
 
-        var result = publisher.Publish(source, payload => payload.FirstName);
+        var result = publisher.PublishInline(source, payload => payload.FirstName);
 
         Assert.True(publicationPipeline.WasCalled);
         Assert.Equal("composed:Jan", result.Payload);

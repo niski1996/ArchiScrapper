@@ -31,7 +31,7 @@ public class PublishConsumeRoundtripE2ETests
             "Warsaw",
             new StudentImported("Anna", "Nowak", "Warsaw"));
 
-        var raw = publisher.Publish(typed, payload => JsonSerializer.Serialize(payload));
+        var raw = publisher.PublishInline(typed, payload => JsonSerializer.Serialize(payload));
 
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
