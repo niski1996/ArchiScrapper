@@ -22,34 +22,12 @@ public sealed class EnvelopePublicationPolicyBuilder<TPayload> : IEnvelopePublic
     public IEnvelopePublicationPolicy<TPayload> Build()
     {
         return new EnvelopePublicationPolicy<TPayload>(
-            errorHandler ?? new ThrowingEnvelopePublicationErrorHandler<TPayload>(),
-            telemetry ?? new NoOpEnvelopePublicationTelemetry<TPayload>());
+            errorHandler ?? EnvelopePublicationDefaults.StopOnErrorHandler<TPayload>(),
+            telemetry ?? EnvelopePublicationDefaults.NoOpTelemetry<TPayload>());
     }
 
     private sealed record EnvelopePublicationPolicy<TPolicyPayload>(
         IEnvelopePublicationErrorHandler<TPolicyPayload> ErrorHandler,
         IEnvelopePublicationTelemetry<TPolicyPayload>? Telemetry) : IEnvelopePublicationPolicy<TPolicyPayload>;
 
-    private sealed class NoOpEnvelopePublicationTelemetry<TPolicyPayload> : IEnvelopePublicationTelemetry<TPolicyPayload>
-    {
-        public void OnStepStarting(EnvelopePublicationTelemetryContext<TPolicyPayload> context)
-        {
-        }
-
-        public void OnStepSucceeded(EnvelopePublicationTelemetryContext<TPolicyPayload> context)
-        {
-        }
-
-        public void OnStepFailed(EnvelopePublicationTelemetryContext<TPolicyPayload> context)
-        {
-        }
-    }
-
-    private sealed class ThrowingEnvelopePublicationErrorHandler<TPolicyPayload> : IEnvelopePublicationErrorHandler<TPolicyPayload>
-    {
-        public Task<EnvelopePublicationErrorDecision> HandleAsync(EnvelopePublicationErrorContext<TPolicyPayload> context)
-        {
-            return Task.FromResult(EnvelopePublicationErrorDecision.Stop);
-        }
-    }
 }

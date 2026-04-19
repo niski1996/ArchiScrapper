@@ -31,3 +31,4 @@ All notable repository-level changes are documented in this file.
 - Tests migrated to use `RawEnvelope` in canonical processing scenarios.
 - Materialization pipeline DI wiring uses explicit resolver constructor path to preserve default stage execution.
 - Test strategy now includes a consumer simulation layer validating framework usability and extensibility from consumer perspective.
+- Clean-code refactor reduced internal duplication in handling/publication pipelines and aligned abstraction naming (`IEventConsumer` contract file naming).

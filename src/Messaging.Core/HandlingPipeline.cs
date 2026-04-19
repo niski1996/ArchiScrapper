@@ -92,7 +92,7 @@ public sealed class HandlingPipeline<TPayload> : IHandlingPipeline<TPayload>
                 await stepAction();
                 return;
             }
-            catch (Exception exception) when (!IsMarkedForRethrow(exception))
+            catch (Exception exception)
             {
                 var decision = await errorHandler.HandleAsync(
                     new HandlingPipelineErrorContext<TPayload>(
@@ -115,22 +115,9 @@ public sealed class HandlingPipeline<TPayload> : IHandlingPipeline<TPayload>
                     return;
                 }
 
-                MarkForRethrow(exception);
                 throw;
             }
         }
-    }
-
-    private static readonly object RethrowMarker = new();
-
-    private static bool IsMarkedForRethrow(Exception exception)
-    {
-        return exception.Data.Contains(RethrowMarker);
-    }
-
-    private static void MarkForRethrow(Exception exception)
-    {
-        exception.Data[RethrowMarker] = true;
     }
 
     private sealed class ThrowingHandlingPipelineErrorHandler<TPipelinePayload> : IHandlingPipelineErrorHandler<TPipelinePayload>
