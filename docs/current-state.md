@@ -9,6 +9,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 - Publish-side preparation has started with `IEnvelopePublicationPipeline` and `EnvelopePublicationPipeline` for inline payload composition, and the pipeline is registered in `AddCommonMessagingCore()`.
 - `IEnvelopePublisher<TPayload>` / `EnvelopePublisher<TPayload>` provide the public publish-side facade over the publication pipeline.
 - Publish-side reference composition is available through `ComposeWithReference(...)` / `PublishWithReference(...)` and uses the same in-memory storage boundary as consumption.
+- End-to-end publish -> consume roundtrip is covered for inline and referenced payloads in E2E tests.
 
 ## Payload Source Resolution
 - Payload source is resolved before payload factory execution.
