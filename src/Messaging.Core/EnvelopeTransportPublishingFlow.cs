@@ -2,11 +2,20 @@ using ArchiScrapper.Messaging.Abstractions;
 
 namespace ArchiScrapper.Messaging.Core;
 
+/// <summary>
+/// Composes raw envelopes from typed inputs and forwards them to the transport publisher.
+/// </summary>
+/// <typeparam name="TPayload">Payload type being published.</typeparam>
 public sealed class EnvelopeTransportPublishingFlow<TPayload> : IEnvelopeTransportPublishingFlow<TPayload>
 {
     private readonly IEnvelopePublisher<TPayload> envelopePublisher;
     private readonly IRawEnvelopeTransportPublisher transportPublisher;
 
+    /// <summary>
+    /// Initializes a new instance of transport publishing flow.
+    /// </summary>
+    /// <param name="envelopePublisher">Typed envelope publisher facade.</param>
+    /// <param name="transportPublisher">Transport publisher used for raw envelope handoff.</param>
     public EnvelopeTransportPublishingFlow(
         IEnvelopePublisher<TPayload> envelopePublisher,
         IRawEnvelopeTransportPublisher transportPublisher)
@@ -15,6 +24,7 @@ public sealed class EnvelopeTransportPublishingFlow<TPayload> : IEnvelopeTranspo
         this.transportPublisher = transportPublisher ?? throw new ArgumentNullException(nameof(transportPublisher));
     }
 
+    /// <inheritdoc />
     public Task PublishInlineAsync(
         Models.TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
@@ -31,6 +41,7 @@ public sealed class EnvelopeTransportPublishingFlow<TPayload> : IEnvelopeTranspo
         return transportPublisher.PublishAsync(raw, cancellationToken);
     }
 
+    /// <inheritdoc />
     public Task PublishWithReferenceAsync(
         Models.TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,

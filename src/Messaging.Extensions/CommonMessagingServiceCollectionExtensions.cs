@@ -4,8 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchiScrapper.Messaging.Extensions;
 
+/// <summary>
+/// Dependency injection registration extensions for Common Messaging components.
+/// </summary>
 public static class CommonMessagingServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers core messaging services: payload storage, source resolver, publication pipeline and materialization pipeline.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    /// <returns>Same service collection for chaining.</returns>
     public static IServiceCollection AddCommonMessagingCore(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -26,6 +34,12 @@ public static class CommonMessagingServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Registers raw event processing flow and handling pipeline for payload type <typeparamref name="TPayload"/>.
+    /// </summary>
+    /// <typeparam name="TPayload">Payload type processed by the registered flow.</typeparam>
+    /// <param name="services">Service collection.</param>
+    /// <returns>Same service collection for chaining.</returns>
     public static IServiceCollection AddRawEventProcessingFlow<TPayload>(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -55,6 +69,12 @@ public static class CommonMessagingServiceCollectionExtensions
         return services;
     }
 
+    /// <summary>
+    /// Registers transport publishing flow for payload type <typeparamref name="TPayload"/>.
+    /// </summary>
+    /// <typeparam name="TPayload">Payload type published by the registered flow.</typeparam>
+    /// <param name="services">Service collection.</param>
+    /// <returns>Same service collection for chaining.</returns>
     public static IServiceCollection AddEnvelopeTransportPublishingFlow<TPayload>(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);

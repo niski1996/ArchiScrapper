@@ -3,11 +3,17 @@ using ArchiScrapper.Models;
 
 namespace ArchiScrapper.Messaging.Core;
 
+/// <summary>
+/// Default stage-based implementation of <see cref="IEnvelopeMaterializationPipeline"/>.
+/// </summary>
 public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPipeline
 {
     private readonly IPayloadSourceResolver payloadSourceResolver;
     private readonly IReadOnlyList<IEnvelopeMaterializationStage> stages;
 
+    /// <summary>
+    /// Initializes a pipeline with default resolver and default internal stages.
+    /// </summary>
     public EnvelopeMaterializationPipeline()
         : this(
             new PayloadSourceResolver(new InMemoryPayloadStorageProvider()),
@@ -19,6 +25,10 @@ public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPi
     {
     }
 
+    /// <summary>
+    /// Initializes a pipeline with provided resolver and default internal stages.
+    /// </summary>
+    /// <param name="payloadSourceResolver">Payload source resolver used by select-payload stage.</param>
     public EnvelopeMaterializationPipeline(IPayloadSourceResolver payloadSourceResolver)
         : this(
             payloadSourceResolver,
@@ -30,6 +40,11 @@ public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPi
     {
     }
 
+    /// <summary>
+    /// Initializes a pipeline with explicit resolver and stages.
+    /// </summary>
+    /// <param name="payloadSourceResolver">Payload source resolver used during materialization.</param>
+    /// <param name="stages">Ordered materialization stages to execute.</param>
     public EnvelopeMaterializationPipeline(
         IPayloadSourceResolver payloadSourceResolver,
         IEnumerable<IEnvelopeMaterializationStage> stages)
@@ -39,6 +54,7 @@ public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPi
         this.stages = stages.ToArray();
     }
 
+    /// <inheritdoc />
     public TypedEnvelope<TPayload> Materialize<TPayload>(RawEnvelope source, Func<string, TPayload> payloadFactory)
     {
         var context = new EnvelopeMaterializationContext<TPayload>(source, payloadFactory, payloadSourceResolver);

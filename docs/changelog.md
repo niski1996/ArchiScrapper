@@ -9,6 +9,7 @@ All notable repository-level changes are documented in this file.
 ### Changed
 - Established repository-wide assembly/package version baseline at `1.0.0` in `Directory.Build.props` for user-testing release alignment.
 - Updated root `README.md` to reflect actual implementation scope and current 1.0 user-testing workflow.
+- Added XML documentation comments for public messaging contracts, pipelines, facades, and DI extension methods to improve IntelliSense and API discoverability.
 
 ## [1.0.0] - 2026-04-19
 ### Added

@@ -2,6 +2,10 @@ using ArchiScrapper.Messaging.Abstractions;
 
 namespace ArchiScrapper.Messaging.Core;
 
+/// <summary>
+/// Default handling pipeline implementation executing infrastructure steps, business steps, and final consumer.
+/// </summary>
+/// <typeparam name="TPayload">Payload type processed by the pipeline.</typeparam>
 public sealed class HandlingPipeline<TPayload> : IHandlingPipeline<TPayload>
 {
     private readonly IReadOnlyList<IInfrastructureStep<TPayload>> infrastructureSteps;
@@ -9,6 +13,13 @@ public sealed class HandlingPipeline<TPayload> : IHandlingPipeline<TPayload>
     private readonly IEventConsumer<TPayload> consumer;
     private readonly IHandlingPipelineErrorHandler<TPayload> errorHandler;
 
+    /// <summary>
+    /// Initializes a new handling pipeline.
+    /// </summary>
+    /// <param name="infrastructureSteps">Ordered infrastructure steps.</param>
+    /// <param name="businessSteps">Ordered business steps.</param>
+    /// <param name="consumer">Final consumer handler.</param>
+    /// <param name="errorHandler">Optional central error handler; defaults to stop-and-rethrow behavior.</param>
     public HandlingPipeline(
         IReadOnlyList<IInfrastructureStep<TPayload>> infrastructureSteps,
         IReadOnlyList<IBusinessStep<TPayload>> businessSteps,
@@ -21,6 +32,7 @@ public sealed class HandlingPipeline<TPayload> : IHandlingPipeline<TPayload>
         this.errorHandler = errorHandler ?? new ThrowingHandlingPipelineErrorHandler<TPayload>();
     }
 
+    /// <inheritdoc />
     public Task ExecuteAsync(HandleContext<TPayload> context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);

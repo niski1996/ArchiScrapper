@@ -3,20 +3,32 @@ using ArchiScrapper.Models;
 
 namespace ArchiScrapper.Messaging.Core;
 
+/// <summary>
+/// Default publish-side pipeline that serializes payload, optionally stores payload by reference,
+/// and composes a <see cref="RawEnvelope"/>.
+/// </summary>
 public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
 {
     private readonly IPayloadStorageWriter payloadStorageWriter;
 
+    /// <summary>
+    /// Initializes a new instance of the publication pipeline with in-memory payload storage writer.
+    /// </summary>
     public EnvelopePublicationPipeline()
         : this(new InMemoryPayloadStorageProvider())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the publication pipeline.
+    /// </summary>
+    /// <param name="payloadStorageWriter">Writer used by payload-reference publication path.</param>
     public EnvelopePublicationPipeline(IPayloadStorageWriter payloadStorageWriter)
     {
         this.payloadStorageWriter = payloadStorageWriter ?? throw new ArgumentNullException(nameof(payloadStorageWriter));
     }
 
+    /// <inheritdoc />
     public RawEnvelope Compose<TPayload>(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
@@ -29,6 +41,7 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
         return ComposeCore(source, payloadSerializer, policy, payloadReference: null);
     }
 
+    /// <inheritdoc />
     public RawEnvelope ComposeWithPolicy<TPayload>(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
@@ -39,6 +52,7 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
         return ComposeCore(source, payloadSerializer, policy, payloadReference: null);
     }
 
+    /// <inheritdoc />
     public RawEnvelope ComposeWithReference<TPayload>(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
@@ -52,6 +66,7 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
         return ComposeCore(source, payloadSerializer, policy, payloadReference);
     }
 
+    /// <inheritdoc />
     public RawEnvelope ComposeWithReferenceWithPolicy<TPayload>(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
