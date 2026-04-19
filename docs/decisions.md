@@ -53,3 +53,10 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Add `IEnvelopePublicationErrorHandler<TPayload>` and make `IEnvelopePublicationPipeline` / `IEnvelopePublisher<TPayload>` accept an optional handler per call; default behavior is stop-and-rethrow.
 - Alternatives considered: Separate ad hoc `try/catch` blocks inside publisher methods, or global static policy.
 - Consequences: Publication can be customized at the call site without introducing a broader orchestration framework.
+
+### DEC-20260419-PublicationPolicyBuilderAndTelemetry
+- Status: Accepted
+- Context: Call-site handlers are useful, but users also need a reusable way to compose publish policy and observe publication steps.
+- Decision: Add `IEnvelopePublicationPolicyBuilder<TPayload>` and `IEnvelopePublicationTelemetry<TPayload>`; publish APIs gain policy-based overloads alongside the existing handler-based overloads.
+- Alternatives considered: Hard-code telemetry into the pipeline, or require users to wire separate handler and telemetry objects manually.
+- Consequences: Publication policy can be built once, reused across calls, and instrumented without changing the core pipeline.

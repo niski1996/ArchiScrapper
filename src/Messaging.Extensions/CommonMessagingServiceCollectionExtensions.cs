@@ -14,6 +14,7 @@ public static class CommonMessagingServiceCollectionExtensions
         services.AddSingleton<IPayloadStorageWriter>(serviceProvider =>
             (IPayloadStorageWriter)serviceProvider.GetRequiredService<IPayloadStorageProvider>());
         services.AddSingleton<IPayloadSourceResolver, PayloadSourceResolver>();
+        services.AddSingleton(typeof(IEnvelopePublicationPolicyBuilder<>), typeof(EnvelopePublicationPolicyBuilder<>));
         services.AddSingleton<IEnvelopePublicationPipeline>(serviceProvider =>
             new EnvelopePublicationPipeline(serviceProvider.GetRequiredService<IPayloadStorageWriter>()));
         services.AddSingleton(typeof(IEnvelopePublisher<>), typeof(EnvelopePublisher<>));

@@ -23,6 +23,7 @@ All notable repository-level changes are documented in this file.
 - Explicit inline convenience method `PublishInline(...)` on `IEnvelopePublisher<TPayload>`.
 - Central handling pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions.
 - Central publication pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions per call.
+- Publication policy builder and telemetry hook for reusable publish-side configuration.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

@@ -57,11 +57,32 @@ public class EnvelopePublisherTests
             return new RawEnvelope(source.FirstName, source.LastName, source.City, $"composed:{payloadSerializer(source.Payload)}");
         }
 
+        public RawEnvelope ComposeWithPolicy<TPayload>(
+            TypedEnvelope<TPayload> source,
+            Func<TPayload, string> payloadSerializer,
+            IEnvelopePublicationPolicy<TPayload> policy)
+        {
+            WasCalled = true;
+
+            return new RawEnvelope(source.FirstName, source.LastName, source.City, $"policy:{payloadSerializer(source.Payload)}");
+        }
+
         public RawEnvelope ComposeWithReference<TPayload>(
             TypedEnvelope<TPayload> source,
             Func<TPayload, string> payloadSerializer,
             string payloadReference,
             IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
+        {
+            WasCalled = true;
+
+            return new RawEnvelope(source.FirstName, source.LastName, source.City, string.Empty, payloadReference);
+        }
+
+        public RawEnvelope ComposeWithReferenceWithPolicy<TPayload>(
+            TypedEnvelope<TPayload> source,
+            Func<TPayload, string> payloadSerializer,
+            string payloadReference,
+            IEnvelopePublicationPolicy<TPayload> policy)
         {
             WasCalled = true;
 

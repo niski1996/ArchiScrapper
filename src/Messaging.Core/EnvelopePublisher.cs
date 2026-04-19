@@ -20,12 +20,28 @@ public sealed class EnvelopePublisher<TPayload> : IEnvelopePublisher<TPayload>
         return publicationPipeline.Compose(source, payloadSerializer, errorHandler);
     }
 
+    public RawEnvelope PublishInlineWithPolicy(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationPolicy<TPayload> policy)
+    {
+        return publicationPipeline.ComposeWithPolicy(source, payloadSerializer, policy);
+    }
+
     public RawEnvelope Publish(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
         IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
     {
         return PublishInline(source, payloadSerializer, errorHandler);
+    }
+
+    public RawEnvelope PublishWithPolicy(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationPolicy<TPayload> policy)
+    {
+        return PublishInlineWithPolicy(source, payloadSerializer, policy);
     }
 
     public RawEnvelope PublishWithReference(
@@ -35,5 +51,14 @@ public sealed class EnvelopePublisher<TPayload> : IEnvelopePublisher<TPayload>
         IEnvelopePublicationErrorHandler<TPayload>? errorHandler = null)
     {
         return publicationPipeline.ComposeWithReference(source, payloadSerializer, payloadReference, errorHandler);
+    }
+
+    public RawEnvelope PublishWithReferenceWithPolicy(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        string payloadReference,
+        IEnvelopePublicationPolicy<TPayload> policy)
+    {
+        return publicationPipeline.ComposeWithReferenceWithPolicy(source, payloadSerializer, payloadReference, policy);
     }
 }

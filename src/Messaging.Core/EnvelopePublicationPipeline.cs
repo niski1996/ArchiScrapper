@@ -39,6 +39,16 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
             payload);
     }
 
+    public RawEnvelope ComposeWithPolicy<TPayload>(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationPolicy<TPayload> policy)
+    {
+        ArgumentNullException.ThrowIfNull(policy);
+
+        return ComposeCore(source, payloadSerializer, policy, payloadReference: null);
+    }
+
     public RawEnvelope ComposeWithReference<TPayload>(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
@@ -81,6 +91,17 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
             source.City,
             string.Empty,
             payloadReference);
+    }
+
+    public RawEnvelope ComposeWithReferenceWithPolicy<TPayload>(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        string payloadReference,
+        IEnvelopePublicationPolicy<TPayload> policy)
+    {
+        ArgumentNullException.ThrowIfNull(policy);
+
+        return ComposeCore(source, payloadSerializer, policy, payloadReference);
     }
 
     private static TResult ExecuteWithErrorPolicy<TPayload, TResult>(
@@ -141,6 +162,105 @@ public sealed class EnvelopePublicationPipeline : IEnvelopePublicationPipeline
     private static void MarkForRethrow(Exception exception)
     {
         exception.Data[RethrowMarker] = true;
+    }
+
+    private RawEnvelope ComposeCore<TPayload>(
+        TypedEnvelope<TPayload> source,
+        Func<TPayload, string> payloadSerializer,
+        IEnvelopePublicationPolicy<TPayload> policy,
+        string? payloadReference)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(payloadSerializer);
+
+        var serializedPayload = ExecuteWithPolicy(
+            source,
+            EnvelopePublicationStepKind.Serialize,
+            policy,
+            () => payloadSerializer(source.Payload) ?? throw new InvalidOperationException("Payload serializer returned null."),
+            _ => string.Empty);
+
+        if (payloadReference is null)
+        {
+            return new RawEnvelope(source.FirstName, source.LastName, source.City, serializedPayload);
+        }
+
+        var stored = ExecuteWithPolicy(
+            source,
+            EnvelopePublicationStepKind.Store,
+            policy,
+            () =>
+            {
+                payloadStorageWriter.PutPayload(payloadReference, serializedPayload);
+                return true;
+            },
+            _ => false);
+
+        if (!stored)
+        {
+            return new RawEnvelope(source.FirstName, source.LastName, source.City, serializedPayload);
+        }
+
+        return new RawEnvelope(source.FirstName, source.LastName, source.City, string.Empty, payloadReference);
+    }
+
+    private static TResult ExecuteWithPolicy<TPayload, TResult>(
+        TypedEnvelope<TPayload> source,
+        EnvelopePublicationStepKind stepKind,
+        IEnvelopePublicationPolicy<TPayload> policy,
+        Func<TResult> action,
+        Func<EnvelopePublicationTelemetryContext<TPayload>, TResult> continueValueFactory)
+    {
+        var attempt = 1;
+
+        while (true)
+        {
+            var telemetryContext = new EnvelopePublicationTelemetryContext<TPayload>(
+                source,
+                stepKind,
+                attempt,
+                null,
+                CancellationToken.None);
+
+            policy.Telemetry?.OnStepStarting(telemetryContext);
+
+            try
+            {
+                var result = action();
+                policy.Telemetry?.OnStepSucceeded(telemetryContext);
+                return result;
+            }
+            catch (Exception exception)
+            {
+                policy.Telemetry?.OnStepFailed(telemetryContext with { Exception = exception });
+
+                var decision = policy.ErrorHandler.HandleAsync(
+                    new EnvelopePublicationErrorContext<TPayload>(
+                        source,
+                        stepKind,
+                        attempt,
+                        exception,
+                        CancellationToken.None)).GetAwaiter().GetResult();
+
+                if (decision.Action == EnvelopePublicationErrorAction.Retry)
+                {
+                    attempt++;
+                    continue;
+                }
+
+                if (decision.Action == EnvelopePublicationErrorAction.Continue)
+                {
+                    return continueValueFactory(new EnvelopePublicationTelemetryContext<TPayload>(
+                        source,
+                        stepKind,
+                        attempt,
+                        exception,
+                        CancellationToken.None));
+                }
+
+                throw;
+            }
+        }
     }
 
     private sealed class ThrowingEnvelopePublicationErrorHandler<TPipelinePayload> : IEnvelopePublicationErrorHandler<TPipelinePayload>

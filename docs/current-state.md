@@ -31,6 +31,11 @@ This document is a durable handover snapshot for Copilot and contributors.
 - Publication errors can be resolved as `Retry`, `Continue`, or `Stop`; default behavior is stop-and-rethrow.
 - Inline publication continues with an empty payload on continue; reference publication falls back to inline output if payload storage fails and continue is chosen.
 
+## Publication Policy Builder
+- `IEnvelopePublicationPolicyBuilder<TPayload>` composes reusable publication policy from error handling and telemetry.
+- `IEnvelopePublicationTelemetry<TPayload>` observes publication attempts, successes, and failures per step.
+- Policy-based publish overloads are available on `IEnvelopePublicationPipeline` and `IEnvelopePublisher<TPayload>`.
+
 ## Handling Pipeline Contract
 - Pipeline order is explicit and stable:
   1. `IInfrastructureStep<TPayload>` (framework/technical concerns)
