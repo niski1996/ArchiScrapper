@@ -43,6 +43,9 @@ This document is a durable handover snapshot for Copilot and contributors.
 
 ## Work Unit Documentation
 - Work Unit 01 (`Envelope and Metadata Contract`) is documented separately in `docs/work-units/01-envelope-metadata.md`.
+- Work Unit 02 (`Payload Source Resolution`) is documented separately in `docs/work-units/02-payload-source-resolution.md`.
+- Work Unit 03 (`Materialization Pipeline`) is documented separately in `docs/work-units/03-materialization-pipeline.md`.
+- Work Unit 04 (`Handling Pipeline and Custom Steps`) is documented separately in `docs/work-units/04-handling-pipeline.md`.
 
 ## Continuity Rules
 - Any architecture or behavior change must update:
