@@ -15,6 +15,7 @@ All notable repository-level changes are documented in this file.
 - DI registration extensions: `AddCommonMessagingCore()` and `AddRawEventProcessingFlow<TPayload>()`.
 - Minimal end-to-end usage examples in `samples/README.md` for inline and payload-reference scenarios.
 - New test project: `CommonMessaging.ConsumerSimulationTests` for real consumer-like service scenarios.
+- Shared fixture utilities for consumer simulation scenarios (`ConsumerSimulationTestHost<TPayload>` and `ConsumerSimulationScenarioBuilder<TPayload>`).
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

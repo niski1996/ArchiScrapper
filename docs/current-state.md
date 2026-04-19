@@ -39,6 +39,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 - Validation command:
   - `dotnet build ArchiScrapper.sln && dotnet test ArchiScrapper.sln --no-build`
 - DI registration is covered by unit test (`MessagingExtensionsRegistrationTests`).
+- Consumer simulation tests use a shared `ConsumerSimulationScenarioBuilder<TPayload>` and `ConsumerSimulationTestHost<TPayload>` fixture pair.
 
 ## Continuity Rules
 - Any architecture or behavior change must update:

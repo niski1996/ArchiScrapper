@@ -3,7 +3,6 @@ using ArchiScrapper.Messaging.Abstractions;
 using ArchiScrapper.Messaging.Core;
 using ArchiScrapper.Messaging.Extensions;
 using ArchiScrapper.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ArchiScrapper.CommonMessaging.ConsumerSimulationTests;
@@ -19,14 +18,18 @@ public class ConsumerSimulationScenariosTests
     public async Task MinimalConfigurationProcessesTypedPayload()
     {
         var sink = new RecordingSink();
-        var host = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(sink)
-            .AddConsumer<RecordingStudentHandler>();
+        var scenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(sink)
+            .WithConsumer<RecordingStudentHandler>();
 
-        var serviceProvider = host.BuildServiceProvider();
-        var flow = host.BuildFlow();
+        var flow = scenario.BuildFlow();
 
-        var raw = CreateInlineRawEnvelope("Anna", "Nowak", "Warsaw");
+        var raw = scenario.CreateInlineEnvelope(
+            "Anna",
+            "Nowak",
+            "Warsaw",
+            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
+
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
         Assert.Equal(HandlerOnlySequence, sink.Calls);
@@ -37,16 +40,14 @@ public class ConsumerSimulationScenariosTests
     public async Task PayloadReferenceScenarioResolvesPayloadFromStorage()
     {
         var sink = new RecordingSink();
-        var host = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(sink)
-            .AddConsumer<RecordingStudentHandler>();
+        var scenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(sink)
+            .WithConsumer<RecordingStudentHandler>();
 
-        var serviceProvider = host.BuildServiceProvider();
-        var storage = (InMemoryPayloadStorageProvider)serviceProvider.GetRequiredService<IPayloadStorageProvider>();
-        storage.PutPayload("student-ref-1", JsonSerializer.Serialize(new StudentImported("Jan", "Kowalski", "Krakow")));
+        scenario.SeedStoragePayload("student-ref-1", JsonSerializer.Serialize(new StudentImported("Jan", "Kowalski", "Krakow")));
 
-        var flow = host.BuildFlow();
-        var raw = new RawEnvelope("Jan", "Kowalski", "Krakow", string.Empty, "student-ref-1");
+        var flow = scenario.BuildFlow();
+        var raw = scenario.CreateReferenceEnvelope("Jan", "Kowalski", "Krakow", "student-ref-1");
 
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
@@ -57,15 +58,19 @@ public class ConsumerSimulationScenariosTests
     public async Task CustomStepsAreExecutedInFrameworkBusinessHandlerOrder()
     {
         var sink = new RecordingSink();
-        var host = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(sink)
-            .AddInfrastructureStep<FrameworkAuditStep>()
-            .AddBusinessStep<ValidateStudentStep>()
-            .AddConsumer<RecordingStudentHandler>();
+        var scenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(sink)
+            .WithInfrastructureStep<FrameworkAuditStep>()
+            .WithBusinessStep<ValidateStudentStep>()
+            .WithConsumer<RecordingStudentHandler>();
 
-        var flow = host.BuildFlow();
+        var flow = scenario.BuildFlow();
 
-        var raw = CreateInlineRawEnvelope("Anna", "Nowak", "Warsaw");
+        var raw = scenario.CreateInlineEnvelope(
+            "Anna",
+            "Nowak",
+            "Warsaw",
+            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
         Assert.Equal(FullPipelineSequence, sink.Calls);
@@ -75,8 +80,8 @@ public class ConsumerSimulationScenariosTests
     [Fact]
     public void MissingConsumerRegistrationFailsFastAtResolutionTime()
     {
-        var host = new ConsumerSimulationTestHost<StudentImported>();
-        var serviceProvider = host.BuildServiceProvider();
+        var scenario = new ConsumerSimulationScenarioBuilder<StudentImported>();
+        var serviceProvider = scenario.BuildServiceProvider();
 
         Assert.Throws<InvalidOperationException>(
             () => serviceProvider.GetRequiredService<IRawEventProcessingFlow<StudentImported>>());
@@ -86,14 +91,18 @@ public class ConsumerSimulationScenariosTests
     public async Task ExceptionInCustomStepIsPropagatedAndHandlerIsNotExecuted()
     {
         var sink = new RecordingSink();
-        var host = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(sink)
-            .AddInfrastructureStep<ThrowingInfrastructureStep>()
-            .AddConsumer<RecordingStudentHandler>();
+        var scenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(sink)
+            .WithInfrastructureStep<ThrowingInfrastructureStep>()
+            .WithConsumer<RecordingStudentHandler>();
 
-        var flow = host.BuildFlow();
+        var flow = scenario.BuildFlow();
 
-        var raw = CreateInlineRawEnvelope("Anna", "Nowak", "Warsaw");
+        var raw = scenario.CreateInlineEnvelope(
+            "Anna",
+            "Nowak",
+            "Warsaw",
+            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => flow.ProcessAsync(raw, DeserializeStudentImported));
 
@@ -106,32 +115,30 @@ public class ConsumerSimulationScenariosTests
         var firstSink = new RecordingSink();
         var secondSink = new RecordingSink();
 
-        var firstHost = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(firstSink)
-            .AddInfrastructureStep<FrameworkAuditStep>()
-            .AddConsumer<RecordingStudentHandler>();
+        var firstScenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(firstSink)
+            .WithInfrastructureStep<FrameworkAuditStep>()
+            .WithConsumer<RecordingStudentHandler>();
 
-        var secondHost = new ConsumerSimulationTestHost<StudentImported>()
-            .AddSingleton(secondSink)
-            .AddBusinessStep<ValidateStudentStep>()
-            .AddConsumer<RecordingStudentHandler>();
+        var secondScenario = new ConsumerSimulationScenarioBuilder<StudentImported>()
+            .WithSingleton(secondSink)
+            .WithBusinessStep<ValidateStudentStep>()
+            .WithConsumer<RecordingStudentHandler>();
 
-        var raw = CreateInlineRawEnvelope("Anna", "Nowak", "Warsaw");
+        var raw = firstScenario.CreateInlineEnvelope(
+            "Anna",
+            "Nowak",
+            "Warsaw",
+            firstScenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
 
-        var firstFlow = firstHost.BuildFlow();
+        var firstFlow = firstScenario.BuildFlow();
         await firstFlow.ProcessAsync(raw, DeserializeStudentImported);
 
-        var secondFlow = secondHost.BuildFlow();
+        var secondFlow = secondScenario.BuildFlow();
         await secondFlow.ProcessAsync(raw, DeserializeStudentImported);
 
         Assert.Equal(InfraThenHandlerSequence, firstSink.Calls);
         Assert.Equal(BusinessThenHandlerSequence, secondSink.Calls);
-    }
-
-    private static RawEnvelope CreateInlineRawEnvelope(string firstName, string lastName, string city)
-    {
-        var payload = JsonSerializer.Serialize(new StudentImported(firstName, lastName, city));
-        return new RawEnvelope(firstName, lastName, city, payload);
     }
 
     private static StudentImported DeserializeStudentImported(string payload)
