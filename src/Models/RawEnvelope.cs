@@ -2,10 +2,10 @@ using ArchiScrapper.Contracts;
 
 namespace ArchiScrapper.Models;
 
-public sealed record ResolvingExampleEvent(
+public record RawEnvelope(
     string FirstName,
     string LastName,
     string City,
     string Payload,
     string? PayloadReference = null)
-    : RawEnvelope(FirstName, LastName, City, Payload, PayloadReference);
+    : EventEnvelopeBase(FirstName, LastName, City), IHasPayload, IHasPayloadReference;

@@ -49,10 +49,10 @@ public class RawEventProcessingFlowBuilderTests
         Assert.Collection(calls, item => Assert.Equal("consumer:Stub", item));
     }
 
-    private static ResolvingExampleEvent CreateSource(string firstName, string lastName, string city)
+    private static RawEnvelope CreateSource(string firstName, string lastName, string city)
     {
         var payload = JsonSerializer.Serialize(new PersonPayload(firstName, lastName, city));
-        return new ResolvingExampleEvent(firstName, lastName, city, payload);
+        return new RawEnvelope(firstName, lastName, city, payload);
     }
 
     private sealed record PersonPayload(string FirstName, string LastName, string City);
@@ -88,7 +88,7 @@ public class RawEventProcessingFlowBuilderTests
     {
         public bool WasCalled { get; private set; }
 
-        public TypedEnvelope<TPayload> Materialize<TPayload>(ResolvingExampleEvent source, Func<string, TPayload> payloadFactory)
+        public TypedEnvelope<TPayload> Materialize<TPayload>(RawEnvelope source, Func<string, TPayload> payloadFactory)
         {
             WasCalled = true;
 

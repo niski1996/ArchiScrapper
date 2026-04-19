@@ -16,7 +16,7 @@ public sealed class RawEventProcessingFlow<TPayload> : IRawEventProcessingFlow<T
     }
 
     public async Task ProcessAsync(
-        Models.ResolvingExampleEvent source,
+        Models.RawEnvelope source,
         Func<string, TPayload> payloadFactory,
         CancellationToken cancellationToken = default)
     {

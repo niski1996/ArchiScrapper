@@ -5,7 +5,7 @@ namespace ArchiScrapper.Messaging.Abstractions;
 public interface IRawEventProcessingFlow<TPayload>
 {
     Task ProcessAsync(
-        ResolvingExampleEvent source,
+    RawEnvelope source,
         Func<string, TPayload> payloadFactory,
         CancellationToken cancellationToken = default);
 }

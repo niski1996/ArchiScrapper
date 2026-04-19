@@ -8,7 +8,7 @@ public class EnvelopeMaterializerTests
     [Fact]
     public void MaterializeCreatesTypedEnvelopeWithCopiedMetadata()
     {
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Jan",
             "Kowalski",
             "Krakow",

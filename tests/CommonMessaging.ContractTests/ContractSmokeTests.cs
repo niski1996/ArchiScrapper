@@ -18,7 +18,7 @@ public class EnvelopeMaterializerContractTests
     private static void AssertMaterializerContract<TMaterializer>(TMaterializer sut)
         where TMaterializer : IEnvelopeMaterializer
     {
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Jan",
             "Kowalski",
             "Krakow",

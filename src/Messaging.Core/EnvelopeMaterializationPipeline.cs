@@ -5,29 +5,43 @@ namespace ArchiScrapper.Messaging.Core;
 
 public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPipeline
 {
-    private static readonly IReadOnlyList<IEnvelopeMaterializationStage> DefaultStages =
-    [
-        new ValidateSourceStage(),
-        new SelectPayloadStage(),
-        new BuildTypedEnvelopeStage(),
-    ];
-
+    private readonly IPayloadSourceResolver payloadSourceResolver;
     private readonly IReadOnlyList<IEnvelopeMaterializationStage> stages;
 
     public EnvelopeMaterializationPipeline()
-        : this(DefaultStages)
+        : this(
+            new PayloadSourceResolver(new InMemoryPayloadStorageProvider()),
+            [
+                new ValidateSourceStage(),
+                new SelectPayloadStage(),
+                new BuildTypedEnvelopeStage(),
+            ])
     {
     }
 
-    public EnvelopeMaterializationPipeline(IEnumerable<IEnvelopeMaterializationStage> stages)
+    public EnvelopeMaterializationPipeline(IPayloadSourceResolver payloadSourceResolver)
+        : this(
+            payloadSourceResolver,
+            [
+                new ValidateSourceStage(),
+                new SelectPayloadStage(),
+                new BuildTypedEnvelopeStage(),
+            ])
     {
+    }
+
+    public EnvelopeMaterializationPipeline(
+        IPayloadSourceResolver payloadSourceResolver,
+        IEnumerable<IEnvelopeMaterializationStage> stages)
+    {
+        this.payloadSourceResolver = payloadSourceResolver ?? throw new ArgumentNullException(nameof(payloadSourceResolver));
         ArgumentNullException.ThrowIfNull(stages);
         this.stages = stages.ToArray();
     }
 
-    public TypedEnvelope<TPayload> Materialize<TPayload>(ResolvingExampleEvent source, Func<string, TPayload> payloadFactory)
+    public TypedEnvelope<TPayload> Materialize<TPayload>(RawEnvelope source, Func<string, TPayload> payloadFactory)
     {
-        var context = new EnvelopeMaterializationContext<TPayload>(source, payloadFactory);
+        var context = new EnvelopeMaterializationContext<TPayload>(source, payloadFactory, payloadSourceResolver);
 
         foreach (var stage in stages)
         {
@@ -65,7 +79,7 @@ public sealed class EnvelopeMaterializationPipeline : IEnvelopeMaterializationPi
         public void Execute<TPayload>(EnvelopeMaterializationContext<TPayload> context)
         {
             ArgumentNullException.ThrowIfNull(context);
-            context.RawPayload = context.Source.Payload;
+            context.RawPayload = context.PayloadSourceResolver.ResolvePayload(context.Source);
             context.Payload = context.PayloadFactory(context.RawPayload);
         }
     }

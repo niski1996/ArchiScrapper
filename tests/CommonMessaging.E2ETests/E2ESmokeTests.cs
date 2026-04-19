@@ -19,7 +19,7 @@ public class ConsumerConfiguredPipelineE2ETests
             .UseHandler(new BusinessConsumer(calls))
             .Build();
 
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Anna",
             "Nowak",
             "Gdansk",

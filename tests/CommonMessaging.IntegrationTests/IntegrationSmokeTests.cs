@@ -20,7 +20,7 @@ public class ProcessingIntegrationTests
             .Build();
 
         var flow = new RawEventProcessingFlow<PersonPayload>(new EnvelopeMaterializer(), pipeline);
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Jan",
             "Kowalski",
             "Krakow",
@@ -43,7 +43,7 @@ public class ProcessingIntegrationTests
             .Build();
 
         var flow = new RawEventProcessingFlow<PersonPayload>(new EnvelopeMaterializer(), pipeline);
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Jan",
             "Kowalski",
             "",

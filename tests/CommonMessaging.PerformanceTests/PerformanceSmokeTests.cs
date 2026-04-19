@@ -17,7 +17,7 @@ public class ProcessingPerformanceTests
             .Build();
 
         var largeText = new string('X', 2 * 1024 * 1024);
-        var source = new ResolvingExampleEvent(
+        var source = new RawEnvelope(
             "Jan",
             "Kowalski",
             "Krakow",
@@ -41,7 +41,7 @@ public class ProcessingPerformanceTests
 
         for (var index = 0; index < 200; index++)
         {
-            var source = new ResolvingExampleEvent(
+            var source = new RawEnvelope(
                 "Jan",
                 "Kowalski",
                 "Krakow",

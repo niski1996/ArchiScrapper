@@ -17,7 +17,7 @@ public sealed class EnvelopeMaterializer : IEnvelopeMaterializer
         this.pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
     }
 
-    public TypedEnvelope<TPayload> Materialize<TPayload>(ResolvingExampleEvent source, Func<string, TPayload> payloadFactory)
+    public TypedEnvelope<TPayload> Materialize<TPayload>(RawEnvelope source, Func<string, TPayload> payloadFactory)
     {
         return pipeline.Materialize(source, payloadFactory);
     }

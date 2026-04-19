@@ -24,7 +24,7 @@ public class RawEventProcessingFlowTests
             handlingPipeline);
 
         var rawPayload = JsonSerializer.Serialize(new PersonPayload("Jan", "Kowalski", "Krakow"));
-        var source = new ResolvingExampleEvent("Jan", "Kowalski", "Krakow", rawPayload);
+        var source = new RawEnvelope("Jan", "Kowalski", "Krakow", rawPayload);
 
         await flow.ProcessAsync(
             source,
