@@ -6,6 +6,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 - Transport input type: `RawEnvelope`.
 - Processing chain: `RawEnvelope` -> materialization pipeline -> `TypedEnvelope<TPayload>` -> handling pipeline.
 - `ResolvingExampleEvent` is compatibility-only and built on top of `RawEnvelope`.
+- Publish-side preparation has started with `IEnvelopePublicationPipeline` and `EnvelopePublicationPipeline` for inline payload composition, and the pipeline is registered in `AddCommonMessagingCore()`.
 
 ## Payload Source Resolution
 - Payload source is resolved before payload factory execution.

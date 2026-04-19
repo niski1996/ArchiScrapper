@@ -16,6 +16,7 @@ All notable repository-level changes are documented in this file.
 - Minimal end-to-end usage examples in `samples/README.md` for inline and payload-reference scenarios.
 - New test project: `CommonMessaging.ConsumerSimulationTests` for real consumer-like service scenarios.
 - Shared fixture utilities for consumer simulation scenarios (`ConsumerSimulationTestHost<TPayload>` and `ConsumerSimulationScenarioBuilder<TPayload>`).
+- Initial publish-side preparation pipeline for composing `RawEnvelope` from `TypedEnvelope<TPayload>`.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

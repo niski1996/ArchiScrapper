@@ -12,6 +12,7 @@ public static class CommonMessagingServiceCollectionExtensions
 
         services.AddSingleton<IPayloadStorageProvider, InMemoryPayloadStorageProvider>();
         services.AddSingleton<IPayloadSourceResolver, PayloadSourceResolver>();
+        services.AddSingleton<IEnvelopePublicationPipeline, EnvelopePublicationPipeline>();
         services.AddSingleton<IEnvelopeMaterializationPipeline>(serviceProvider =>
             new EnvelopeMaterializationPipeline(
                 serviceProvider.GetRequiredService<IPayloadSourceResolver>()));
