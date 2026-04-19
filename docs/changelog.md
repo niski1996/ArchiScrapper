@@ -3,6 +3,14 @@
 All notable repository-level changes are documented in this file.
 
 ## [Unreleased]
+### Fixed
+- Added missing `Microsoft.Extensions.DependencyInjection` reference in `CommonMessaging.IntegrationTests` to restore build/test compilation for integration scenarios.
+
+### Changed
+- Established repository-wide assembly/package version baseline at `1.0.0` in `Directory.Build.props` for user-testing release alignment.
+- Updated root `README.md` to reflect actual implementation scope and current 1.0 user-testing workflow.
+
+## [1.0.0] - 2026-04-19
 ### Added
 - Initial .NET 8 repository foundation.
 - AI workflow instructions and reusable prompts.

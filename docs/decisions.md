@@ -67,3 +67,10 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Add `UseDefaultProfile(...)` extension for `IEnvelopePublicationPolicyBuilder<TPayload>` backed by `DefaultEnvelopePublicationErrorHandler<TPayload>`.
 - Alternatives considered: Require custom error handler implementation for every service.
 - Consequences: Faster onboarding and consistent default error behavior, while preserving full customization through explicit handlers.
+
+### DEC-20260419-UserTestingReleaseBaseline
+- Status: Accepted
+- Context: The repository is ready for external user testing and needs a stable release marker with minimal operational risk.
+- Decision: Set a `1.0.0` version baseline in shared build properties and prioritize minimal unblockers that keep the current architecture unchanged.
+- Alternatives considered: Delay user testing until broader roadmap completion, or introduce larger refactors before first release.
+- Consequences: Users can start validation now on a stable baseline, while deferred enhancements continue in future iterations.

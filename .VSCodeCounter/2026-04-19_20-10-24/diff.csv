@@ -1,9 +1,0 @@
-"filename", "language", "C#", "comment", "blank", "total"
-"/home/karol/Desktop/ArchiScrapper/src/Messaging.Abstractions/EnvelopeMaterializationContext.cs", "C#", 15, 0, 7, 22
-"/home/karol/Desktop/ArchiScrapper/src/Messaging.Abstractions/IEnvelopeMaterializationPipeline.cs", "C#", 6, 0, 2, 8
-"/home/karol/Desktop/ArchiScrapper/src/Messaging.Abstractions/IEnvelopeMaterializationStage.cs", "C#", 5, 0, 1, 6
-"/home/karol/Desktop/ArchiScrapper/src/Messaging.Core/EnvelopeMaterializationPipeline.cs", "C#", 75, 0, 17, 92
-"/home/karol/Desktop/ArchiScrapper/src/Messaging.Core/EnvelopeMaterializer.cs", "C#", 2, 0, 2, 4
-"/home/karol/Desktop/ArchiScrapper/tests/Messaging.Tests/EnvelopeMaterializationPipelineTests.cs", "C#", 24, 0, 6, 30
-"/home/karol/Desktop/ArchiScrapper/tests/Messaging.Tests/EnvelopeMaterializerTests.cs", "C#", -3, 0, -1, -4
-"Total", "-", 124, 0, 34, 158

@@ -56,6 +56,7 @@ This document is a durable handover snapshot for Copilot and contributors.
   - Performance
 - Validation command:
   - `dotnet build ArchiScrapper.sln && dotnet test ArchiScrapper.sln --no-build`
+- Integration tests compile with DI service-provider extensions enabled via explicit `Microsoft.Extensions.DependencyInjection` reference.
 - DI registration is covered by unit test (`MessagingExtensionsRegistrationTests`).
 - Consumer simulation tests use a shared `ConsumerSimulationScenarioBuilder<TPayload>` and `ConsumerSimulationTestHost<TPayload>` fixture pair.
 - CI workflows are now available under `.github/workflows`:
@@ -75,3 +76,7 @@ This document is a durable handover snapshot for Copilot and contributors.
   - `docs/decisions.md`
   - `docs/changelog.md`
   - this file (`docs/current-state.md`) when baseline changes.
+
+## Release Baseline
+- Repository version baseline for user testing is `1.0.0`.
+- Current focus is stabilization and feedback collection without expanding architectural scope.
