@@ -53,4 +53,13 @@ public class PublicApiCompatibilityTests
         Assert.Contains(methods, method => method.Name == "UseTelemetry");
         Assert.Contains(methods, method => method.Name == "Build");
     }
+
+    [Fact]
+    public void EnvelopeTransportPublishingFlowContractContainsExpectedMethods()
+    {
+        var methods = typeof(IEnvelopeTransportPublishingFlow<>).GetMethods(BindingFlags.Public | BindingFlags.Instance);
+
+        Assert.Contains(methods, method => method.Name == "PublishInlineAsync");
+        Assert.Contains(methods, method => method.Name == "PublishWithReferenceAsync");
+    }
 }

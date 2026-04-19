@@ -25,6 +25,8 @@ All notable repository-level changes are documented in this file.
 - Central publication pipeline error policy with configurable `Retry`, `Continue`, and `Stop` decisions per call.
 - Publication policy builder and telemetry hook for reusable publish-side configuration.
 - Default publication policy profile (`UseDefaultProfile`) and sample usage for publish + telemetry.
+- GitHub Actions workflows for PR quality gate, nightly suite, and release gate test execution policy.
+- Transport publishing flow (`IEnvelopeTransportPublishingFlow<TPayload>`) and `IRawEnvelopeTransportPublisher` boundary for Layer 1 handoff.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

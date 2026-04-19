@@ -1,0 +1,33 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pr-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore ArchiScrapper.sln
+
+      - name: Build
+        run: dotnet build ArchiScrapper.sln --configuration Release --no-restore
+
+      - name: Unit tests
+        run: dotnet test tests/CommonMessaging.UnitTests/CommonMessaging.UnitTests.csproj --configuration Release --no-build
+
+      - name: Contract tests
+        run: dotnet test tests/CommonMessaging.ContractTests/CommonMessaging.ContractTests.csproj --configuration Release --no-build
+
+      - name: Integration smoke tests
+        run: dotnet test tests/CommonMessaging.IntegrationTests/CommonMessaging.IntegrationTests.csproj --configuration Release --no-build

@@ -54,4 +54,13 @@ public static class CommonMessagingServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddEnvelopeTransportPublishingFlow<TPayload>(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddTransient<IEnvelopeTransportPublishingFlow<TPayload>, EnvelopeTransportPublishingFlow<TPayload>>();
+
+        return services;
+    }
 }

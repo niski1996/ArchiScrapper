@@ -1,0 +1,29 @@
+name: Release Gate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore ArchiScrapper.sln
+
+      - name: Build
+        run: dotnet build ArchiScrapper.sln --configuration Release --no-restore
+
+      - name: Compatibility tests
+        run: dotnet test tests/CommonMessaging.CompatibilityTests/CommonMessaging.CompatibilityTests.csproj --configuration Release --no-build
+
+      - name: Performance tests
+        run: dotnet test tests/CommonMessaging.PerformanceTests/CommonMessaging.PerformanceTests.csproj --configuration Release --no-build

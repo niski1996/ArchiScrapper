@@ -24,6 +24,7 @@ This document is a durable handover snapshot for Copilot and contributors.
 ## DI and Composition
 - `AddCommonMessagingCore()` registers storage, payload resolver, materialization pipeline and materializer.
 - `AddRawEventProcessingFlow<TPayload>()` composes handling pipeline and raw processing flow from registered steps and consumer.
+- `AddEnvelopeTransportPublishingFlow<TPayload>()` composes envelope publication with transport handoff through `IRawEnvelopeTransportPublisher`.
 - DI registration explicitly builds `EnvelopeMaterializationPipeline` with default internal stages to avoid empty-stage materialization.
 
 ## Publication Error Policy
@@ -57,6 +58,10 @@ This document is a durable handover snapshot for Copilot and contributors.
   - `dotnet build ArchiScrapper.sln && dotnet test ArchiScrapper.sln --no-build`
 - DI registration is covered by unit test (`MessagingExtensionsRegistrationTests`).
 - Consumer simulation tests use a shared `ConsumerSimulationScenarioBuilder<TPayload>` and `ConsumerSimulationTestHost<TPayload>` fixture pair.
+- CI workflows are now available under `.github/workflows`:
+  - PR quality gate (Unit + Contract + Integration smoke)
+  - Nightly suite (Integration + E2E + ConsumerSimulation + Compatibility)
+  - Release gate (Compatibility + Performance)
 
 ## Work Unit Documentation
 - Work Unit 01 (`Envelope and Metadata Contract`) is documented separately in `docs/work-units/01-envelope-metadata.md`.
