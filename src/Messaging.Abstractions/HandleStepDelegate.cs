@@ -1,0 +1,3 @@
+namespace ArchiScrapper.Messaging.Abstractions;
+
+public delegate Task HandleStepContinuation(CancellationToken cancellationToken);
