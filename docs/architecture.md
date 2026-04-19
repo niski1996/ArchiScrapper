@@ -126,3 +126,78 @@ The current baseline is strongest on the consumption path. The remaining archite
 - Keep custom steps, storage, encryption, compression, and serialization as explicit extension points.
 - Preserve simple defaults for common usage and allow advanced policy only when needed.
 - Ensure consumer simulation remains the acceptance-level view of the framework.
+
+## Suggested Independent Work Units
+
+To keep implementation iterative and avoid running the full test suite for every change, the architecture should be worked in small units with explicit dependency boundaries.
+
+### 1. Envelope and metadata contract
+- Scope: canonical raw transport envelope, envelope metadata, contract stability, compatibility model.
+- Depends on: nothing else in the framework.
+- Primary validation: model-level unit tests and contract tests.
+- Typical change size: small and stable.
+
+### 2. Payload source resolution boundary
+- Scope: inline payload vs payload reference, payload lookup policy, storage abstraction boundary.
+- Depends on: envelope and metadata contract.
+- Primary validation: unit tests and contract tests around payload source behavior.
+- Typical change size: small to medium.
+
+### 3. Materialization pipeline
+- Scope: raw envelope to typed envelope conversion, resolver integration, payload shaping.
+- Depends on: envelope contract and payload resolution boundary.
+- Primary validation: unit tests plus focused integration tests.
+- Typical change size: medium.
+
+### 4. Handling pipeline and custom steps
+- Scope: infrastructure steps, business steps, consumer handler order, pipeline composition.
+- Depends on: typed envelope and handling context.
+- Primary validation: unit tests and consumer-simulation tests.
+- Typical change size: medium.
+
+### 5. Dependency injection and composition
+- Scope: service registration, default wiring, host composition, extension methods.
+- Depends on: materialization and handling contracts.
+- Primary validation: integration tests and consumer-simulation tests.
+- Typical change size: medium.
+
+### 6. Consumer simulation scenarios
+- Scope: real consumer-like service setup, usability, ergonomics, multi-service isolation.
+- Depends on: DI and composition, handling pipeline, payload materialization.
+- Primary validation: consumer-simulation tests.
+- Typical change size: medium to large, but isolated.
+
+### 7. Publish path
+- Scope: outbound message composition, envelope finalization, payload selection, handoff to transport layer.
+- Depends on: envelope contract and metadata policy.
+- Primary validation: publish-focused unit and integration tests once publishing is in scope.
+- Typical change size: large, and should be worked separately from consume-path changes.
+
+### 8. Operational policy
+- Scope: retry, dead-letter, idempotency, cancellation, telemetry, error classification.
+- Depends on: both publish and consume paths.
+- Primary validation: targeted integration and scenario tests.
+- Typical change size: large and cross-cutting.
+
+## Test Scope Guidance
+
+- If the change touches only one unit above, run only that unit’s test layer plus direct dependents.
+- If the change crosses a boundary, run the dependent unit and one adjacent layer upward.
+- Full solution test runs should be reserved for:
+	- contract changes that affect multiple units,
+	- DI/composition changes,
+	- any operational-policy change,
+	- broad refactors touching shared abstractions.
+
+## Work Unit Matrix
+
+| Unit | Depends On | Smallest Useful Test Scope | Avoid Touching |
+| --- | --- | --- | --- |
+| Envelope and metadata contract | Nothing | Unit + Contract | Pipeline behavior, DI wiring |
+| Payload source resolution | Envelope contract | Unit + Contract | Handling order, publish policy |
+| Materialization pipeline | Envelope + payload resolution | Unit + focused Integration | Publish path, operational policy |
+| Handling pipeline and custom steps | Typed envelope + handling context | Unit + ConsumerSimulation | Publish path, storage mechanics |
+| DI and composition | Materialization + handling contracts | Integration + ConsumerSimulation | Contract semantics, metadata schema |
+| Consumer simulation | DI + materialization + handling | ConsumerSimulation only | Internal step mechanics |
+| Publish path | Envelope + metadata policy | Publish-focused Unit + Integration | Consumer-specific acceptance scenarios |
+| Operational policy | Publish + consume paths | Targeted Integration + scenario tests | Low-level model shape |

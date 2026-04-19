@@ -41,6 +41,9 @@ This document is a durable handover snapshot for Copilot and contributors.
 - DI registration is covered by unit test (`MessagingExtensionsRegistrationTests`).
 - Consumer simulation tests use a shared `ConsumerSimulationScenarioBuilder<TPayload>` and `ConsumerSimulationTestHost<TPayload>` fixture pair.
 
+## Work Unit Documentation
+- Work Unit 01 (`Envelope and Metadata Contract`) is documented separately in `docs/work-units/01-envelope-metadata.md`.
+
 ## Continuity Rules
 - Any architecture or behavior change must update:
   - `docs/decisions.md`
