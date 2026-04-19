@@ -102,3 +102,27 @@ When improving existing code:
 - `tests/ArchiScrapper.Infrastructure.Tests`
 
 Add projects only when a concrete requirement exists.
+
+## Architecture Completion Map
+
+The current baseline is strongest on the consumption path. The remaining architecture should be completed in four high-level workstreams:
+
+1. Publish path
+- Define the publish lifecycle from typed model to outbound transport message.
+- Keep publishing boundaries explicit: serialization, payload selection, transformation, storage, envelope composition, handoff to Layer 1.
+- Separate publishing policy from transport mechanics.
+
+2. Metadata and contract policy
+- Define the authoritative envelope metadata set for identity, correlation, causation, versioning, payload location, and observability.
+- Decide which metadata is mandatory, optional, or transport-owned.
+- Establish compatibility expectations for contract evolution.
+
+3. Operational policy
+- Define failure classification, retry, dead-letter, poison-message handling, and idempotency expectations.
+- Clarify which operational concerns belong to this facade versus Layer 1.
+- Keep cancellation and telemetry semantics consistent across publish and consume flows.
+
+4. Extensibility and developer experience
+- Keep custom steps, storage, encryption, compression, and serialization as explicit extension points.
+- Preserve simple defaults for common usage and allow advanced policy only when needed.
+- Ensure consumer simulation remains the acceptance-level view of the framework.

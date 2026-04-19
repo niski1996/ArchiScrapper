@@ -15,6 +15,12 @@
 - Add architecture validation and dependency rules.
 - Improve automation for release checks.
 
+## Phase 4: Architecture Completion
+- Define publish path and outbound message composition.
+- Finalize envelope metadata and contract versioning policy.
+- Define operational policy for retries, dead-lettering, idempotency, and telemetry.
+- Reconcile facade responsibilities with the underlying messaging library.
+
 ## Exit Criteria per Phase
 - Documented decisions updated.
 - Tests and quality gates passing.
