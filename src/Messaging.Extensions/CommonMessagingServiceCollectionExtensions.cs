@@ -11,8 +11,12 @@ public static class CommonMessagingServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddSingleton<IPayloadStorageProvider, InMemoryPayloadStorageProvider>();
+        services.AddSingleton<IPayloadStorageWriter>(serviceProvider =>
+            (IPayloadStorageWriter)serviceProvider.GetRequiredService<IPayloadStorageProvider>());
         services.AddSingleton<IPayloadSourceResolver, PayloadSourceResolver>();
-        services.AddSingleton<IEnvelopePublicationPipeline, EnvelopePublicationPipeline>();
+        services.AddSingleton<IEnvelopePublicationPipeline>(serviceProvider =>
+            new EnvelopePublicationPipeline(serviceProvider.GetRequiredService<IPayloadStorageWriter>()));
+        services.AddSingleton(typeof(IEnvelopePublisher<>), typeof(EnvelopePublisher<>));
         services.AddSingleton<IEnvelopeMaterializationPipeline>(serviceProvider =>
             new EnvelopeMaterializationPipeline(
                 serviceProvider.GetRequiredService<IPayloadSourceResolver>()));

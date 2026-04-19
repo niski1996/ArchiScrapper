@@ -3,6 +3,7 @@ using ArchiScrapper.Messaging.Abstractions;
 namespace ArchiScrapper.Messaging.Core;
 
 public sealed class InMemoryPayloadStorageProvider : IPayloadStorageProvider
+    , IPayloadStorageWriter
 {
     private readonly Dictionary<string, string> data;
 

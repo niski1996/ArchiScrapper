@@ -17,6 +17,8 @@ All notable repository-level changes are documented in this file.
 - New test project: `CommonMessaging.ConsumerSimulationTests` for real consumer-like service scenarios.
 - Shared fixture utilities for consumer simulation scenarios (`ConsumerSimulationTestHost<TPayload>` and `ConsumerSimulationScenarioBuilder<TPayload>`).
 - Initial publish-side preparation pipeline for composing `RawEnvelope` from `TypedEnvelope<TPayload>`.
+- Public publish-side facade `IEnvelopePublisher<TPayload>` / `EnvelopePublisher<TPayload>` and DI registration.
+- Reference-based publish composition with payload storage write path and matching DI wiring.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.

@@ -2,11 +2,11 @@ using ArchiScrapper.Models;
 
 namespace ArchiScrapper.Messaging.Abstractions;
 
-public interface IEnvelopePublicationPipeline
+public interface IEnvelopePublisher<TPayload>
 {
-    RawEnvelope Compose<TPayload>(TypedEnvelope<TPayload> source, Func<TPayload, string> payloadSerializer);
+    RawEnvelope Publish(TypedEnvelope<TPayload> source, Func<TPayload, string> payloadSerializer);
 
-    RawEnvelope ComposeWithReference<TPayload>(
+    RawEnvelope PublishWithReference(
         TypedEnvelope<TPayload> source,
         Func<TPayload, string> payloadSerializer,
         string payloadReference);
