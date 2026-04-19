@@ -16,6 +16,11 @@ This document is a durable handover snapshot for Copilot and contributors.
   - `IPayloadSourceResolver`
   - `IPayloadStorageProvider`
 
+## DI and Composition
+- `AddCommonMessagingCore()` registers storage, payload resolver, materialization pipeline and materializer.
+- `AddRawEventProcessingFlow<TPayload>()` composes handling pipeline and raw processing flow from registered steps and consumer.
+- DI registration explicitly builds `EnvelopeMaterializationPipeline` with default internal stages to avoid empty-stage materialization.
+
 ## Handling Pipeline Contract
 - Pipeline order is explicit and stable:
   1. `IInfrastructureStep<TPayload>` (framework/technical concerns)
@@ -28,10 +33,12 @@ This document is a durable handover snapshot for Copilot and contributors.
   - Contract
   - Integration
   - E2E
+  - ConsumerSimulation
   - Compatibility
   - Performance
 - Validation command:
   - `dotnet build ArchiScrapper.sln && dotnet test ArchiScrapper.sln --no-build`
+- DI registration is covered by unit test (`MessagingExtensionsRegistrationTests`).
 
 ## Continuity Rules
 - Any architecture or behavior change must update:

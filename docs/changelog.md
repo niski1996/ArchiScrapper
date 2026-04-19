@@ -12,8 +12,13 @@ All notable repository-level changes are documented in this file.
 - Core implementations: `PayloadSourceResolver`, `InMemoryPayloadStorageProvider`.
 - Materialization integration with payload source resolver.
 - Multi-layer test projects and coverage for unit/contract/integration/e2e/compatibility/performance.
+- DI registration extensions: `AddCommonMessagingCore()` and `AddRawEventProcessingFlow<TPayload>()`.
+- Minimal end-to-end usage examples in `samples/README.md` for inline and payload-reference scenarios.
+- New test project: `CommonMessaging.ConsumerSimulationTests` for real consumer-like service scenarios.
 
 ### Changed
 - Materialization and raw processing contracts now use `RawEnvelope`.
 - `ResolvingExampleEvent` now acts as compatibility type over `RawEnvelope`.
 - Tests migrated to use `RawEnvelope` in canonical processing scenarios.
+- Materialization pipeline DI wiring uses explicit resolver constructor path to preserve default stage execution.
+- Test strategy now includes a consumer simulation layer validating framework usability and extensibility from consumer perspective.
