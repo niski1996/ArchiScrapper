@@ -31,6 +31,7 @@ This document is a durable handover snapshot for Copilot and contributors.
   1. `IInfrastructureStep<TPayload>` (framework/technical concerns)
   2. `IBusinessStep<TPayload>` (application/domain policy)
   3. `IEventConsumer<TPayload>` (final business endpoint)
+- Failure handling is centralized through `IHandlingPipelineErrorHandler<TPayload>` with `Retry`, `Continue`, and `Stop` decisions; default behavior is stop-and-rethrow.
 
 ## Testing Baseline
 - Active test layers:

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ArchiScrapper.Messaging.Abstractions;
+using ArchiScrapper.Messaging.Core;
 using ArchiScrapper.Messaging.Extensions;
 using ArchiScrapper.Models;
 using Microsoft.Extensions.DependencyInjection;

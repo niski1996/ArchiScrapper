@@ -34,11 +34,13 @@ public static class CommonMessagingServiceCollectionExtensions
             var infrastructureSteps = serviceProvider.GetServices<IInfrastructureStep<TPayload>>();
             var businessSteps = serviceProvider.GetServices<IBusinessStep<TPayload>>();
             var consumer = serviceProvider.GetRequiredService<IEventConsumer<TPayload>>();
+            var errorHandler = serviceProvider.GetService<IHandlingPipelineErrorHandler<TPayload>>();
 
             return new HandlingPipeline<TPayload>(
                 infrastructureSteps.ToArray(),
                 businessSteps.ToArray(),
-                consumer);
+                consumer,
+                errorHandler);
         });
 
         services.AddTransient<IRawEventProcessingFlow<TPayload>>(serviceProvider =>

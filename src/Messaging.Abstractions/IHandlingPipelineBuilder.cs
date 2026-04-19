@@ -8,5 +8,7 @@ public interface IHandlingPipelineBuilder<TPayload>
 
     IHandlingPipelineBuilder<TPayload> UseHandler(IEventConsumer<TPayload> consumer);
 
+    IHandlingPipelineBuilder<TPayload> UseErrorHandler(IHandlingPipelineErrorHandler<TPayload> errorHandler);
+
     IHandlingPipeline<TPayload> Build();
 }

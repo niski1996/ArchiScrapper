@@ -3,6 +3,7 @@ using ArchiScrapper.Messaging.Abstractions;
 using ArchiScrapper.Messaging.Core;
 using ArchiScrapper.Messaging.Extensions;
 using ArchiScrapper.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ArchiScrapper.CommonMessaging.ConsumerSimulationTests;
@@ -24,11 +25,11 @@ public class ConsumerSimulationScenariosTests
 
         var flow = scenario.BuildFlow();
 
-        var raw = scenario.CreateInlineEnvelope(
+        var raw = ConsumerSimulationScenarioBuilder<StudentImported>.CreateInlineEnvelope(
             "Anna",
             "Nowak",
             "Warsaw",
-            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
+            ConsumerSimulationScenarioBuilder<StudentImported>.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
 
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
@@ -47,7 +48,7 @@ public class ConsumerSimulationScenariosTests
         scenario.SeedStoragePayload("student-ref-1", JsonSerializer.Serialize(new StudentImported("Jan", "Kowalski", "Krakow")));
 
         var flow = scenario.BuildFlow();
-        var raw = scenario.CreateReferenceEnvelope("Jan", "Kowalski", "Krakow", "student-ref-1");
+        var raw = ConsumerSimulationScenarioBuilder<StudentImported>.CreateReferenceEnvelope("Jan", "Kowalski", "Krakow", "student-ref-1");
 
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
@@ -66,11 +67,11 @@ public class ConsumerSimulationScenariosTests
 
         var flow = scenario.BuildFlow();
 
-        var raw = scenario.CreateInlineEnvelope(
+        var raw = ConsumerSimulationScenarioBuilder<StudentImported>.CreateInlineEnvelope(
             "Anna",
             "Nowak",
             "Warsaw",
-            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
+            ConsumerSimulationScenarioBuilder<StudentImported>.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
         await flow.ProcessAsync(raw, DeserializeStudentImported);
 
         Assert.Equal(FullPipelineSequence, sink.Calls);
@@ -98,11 +99,11 @@ public class ConsumerSimulationScenariosTests
 
         var flow = scenario.BuildFlow();
 
-        var raw = scenario.CreateInlineEnvelope(
+        var raw = ConsumerSimulationScenarioBuilder<StudentImported>.CreateInlineEnvelope(
             "Anna",
             "Nowak",
             "Warsaw",
-            scenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
+            ConsumerSimulationScenarioBuilder<StudentImported>.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => flow.ProcessAsync(raw, DeserializeStudentImported));
 
@@ -125,11 +126,11 @@ public class ConsumerSimulationScenariosTests
             .WithBusinessStep<ValidateStudentStep>()
             .WithConsumer<RecordingStudentHandler>();
 
-        var raw = firstScenario.CreateInlineEnvelope(
+        var raw = ConsumerSimulationScenarioBuilder<StudentImported>.CreateInlineEnvelope(
             "Anna",
             "Nowak",
             "Warsaw",
-            firstScenario.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
+            ConsumerSimulationScenarioBuilder<StudentImported>.SeedPayload(new StudentImported("Anna", "Nowak", "Warsaw")));
 
         var firstFlow = firstScenario.BuildFlow();
         await firstFlow.ProcessAsync(raw, DeserializeStudentImported);

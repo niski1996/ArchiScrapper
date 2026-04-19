@@ -7,6 +7,7 @@ public sealed class HandlingPipelineBuilder<TPayload> : IHandlingPipelineBuilder
     private readonly List<IInfrastructureStep<TPayload>> infrastructureSteps = [];
     private readonly List<IBusinessStep<TPayload>> businessSteps = [];
     private IEventConsumer<TPayload>? consumer;
+    private IHandlingPipelineErrorHandler<TPayload>? errorHandler;
 
     public IHandlingPipelineBuilder<TPayload> UseInfrastructureStep(IInfrastructureStep<TPayload> infrastructureMiddleware)
     {
@@ -28,6 +29,12 @@ public sealed class HandlingPipelineBuilder<TPayload> : IHandlingPipelineBuilder
         return this;
     }
 
+    public IHandlingPipelineBuilder<TPayload> UseErrorHandler(IHandlingPipelineErrorHandler<TPayload> errorHandler)
+    {
+        this.errorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
+        return this;
+    }
+
     public IHandlingPipeline<TPayload> Build()
     {
         if (consumer is null)
@@ -38,6 +45,7 @@ public sealed class HandlingPipelineBuilder<TPayload> : IHandlingPipelineBuilder
         return new HandlingPipeline<TPayload>(
             infrastructureSteps.ToArray(),
             businessSteps.ToArray(),
-            consumer);
+            consumer,
+            errorHandler);
     }
 }

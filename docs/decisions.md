@@ -39,3 +39,10 @@ Record significant architectural and workflow decisions in chronological order.
 - Decision: Introduce `IPayloadSourceResolver` and `IPayloadStorageProvider` abstractions; materialization pipeline resolves payload via resolver.
 - Alternatives considered: Resolve payload directly inside stages without dedicated abstractions.
 - Consequences: Better SRP and testability; easier replacement of storage backends and resolution strategies.
+
+### DEC-20260419-HandlingPipelineErrorPolicy
+- Status: Accepted
+- Context: Handling pipeline steps need a single configurable place for failure handling instead of scattered `try/catch` blocks.
+- Decision: Introduce a central `IHandlingPipelineErrorHandler<TPayload>` that can resolve failures as `Retry`, `Continue`, or `Stop`; the default behavior remains stop-and-rethrow.
+- Alternatives considered: Per-step ad hoc exception handling, silent swallowing, or hard-coded retries.
+- Consequences: Consumers can program retry/skip/abort behavior declaratively while the framework keeps one consistent error boundary.

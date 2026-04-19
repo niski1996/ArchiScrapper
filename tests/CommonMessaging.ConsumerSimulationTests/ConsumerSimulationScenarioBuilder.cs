@@ -1,5 +1,6 @@
 using System.Text.Json;
 using ArchiScrapper.Messaging.Abstractions;
+using ArchiScrapper.Messaging.Core;
 using ArchiScrapper.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -47,7 +48,7 @@ internal sealed class ConsumerSimulationScenarioBuilder<TPayload>
         return host.BuildFlow();
     }
 
-    public string SeedPayload<TPayloadRecord>(TPayloadRecord payload)
+    public static string SeedPayload<TPayloadRecord>(TPayloadRecord payload)
     {
         return JsonSerializer.Serialize(payload);
     }
@@ -58,12 +59,12 @@ internal sealed class ConsumerSimulationScenarioBuilder<TPayload>
         storage.PutPayload(reference, payload);
     }
 
-    public RawEnvelope CreateInlineEnvelope(string firstName, string lastName, string city, string payload)
+    public static RawEnvelope CreateInlineEnvelope(string firstName, string lastName, string city, string payload)
     {
         return new RawEnvelope(firstName, lastName, city, payload);
     }
 
-    public RawEnvelope CreateReferenceEnvelope(string firstName, string lastName, string city, string payloadReference)
+    public static RawEnvelope CreateReferenceEnvelope(string firstName, string lastName, string city, string payloadReference)
     {
         return new RawEnvelope(firstName, lastName, city, string.Empty, payloadReference);
     }

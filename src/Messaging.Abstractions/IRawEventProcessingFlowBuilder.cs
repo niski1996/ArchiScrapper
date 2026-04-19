@@ -10,5 +10,7 @@ public interface IRawEventProcessingFlowBuilder<TPayload>
 
     IRawEventProcessingFlowBuilder<TPayload> UseHandler(IEventConsumer<TPayload> consumer);
 
+    IRawEventProcessingFlowBuilder<TPayload> UseErrorHandler(IHandlingPipelineErrorHandler<TPayload> errorHandler);
+
     IRawEventProcessingFlow<TPayload> Build();
 }

@@ -31,6 +31,12 @@ public sealed class RawEventProcessingFlowBuilder<TPayload> : IRawEventProcessin
         return this;
     }
 
+    public IRawEventProcessingFlowBuilder<TPayload> UseErrorHandler(IHandlingPipelineErrorHandler<TPayload> errorHandler)
+    {
+        handlingPipelineBuilder.UseErrorHandler(errorHandler);
+        return this;
+    }
+
     public IRawEventProcessingFlow<TPayload> Build()
     {
         var flowMaterializer = materializer ?? new EnvelopeMaterializer();
